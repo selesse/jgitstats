@@ -1,0 +1,32 @@
+apply plugin: 'application'
+apply plugin: 'build-announcements'
+apply plugin: 'java'
+
+mainClassName = 'com.selesse.jgitstats.Main'
+version = '0.1.0'
+
+repositories {
+    mavenCentral()
+}
+
+ext.jgitVersion = '3.4.1.201406201815-r'
+
+dependencies {
+    compile 'ch.qos.logback:logback-classic:1.1.2'
+    compile "org.eclipse.jgit:org.eclipse.jgit:$jgitVersion"
+    compile 'org.slf4j:slf4j-api:1.7.5'
+
+    testCompile 'junit:junit:4.11'
+}
+
+jar {
+    manifest {
+        attributes (
+            'Manifest-Version': version,
+            'Main-Class': mainClassName,
+            'Created-By': System.getProperty('java.version') + ' (' + System.getProperty('java.vendor') + ')',
+            'Built-With': "gradle-${project.getGradle().getGradleVersion()}, groovy-${GroovySystem.getVersion()}",
+            'Build-Time': new Date(),
+       )
+    }
+}
