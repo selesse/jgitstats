@@ -1,20 +1,22 @@
 package com.selesse.jgitstats;
 
-import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
+import com.selesse.jgitstats.git.CommitDiff;
 import com.selesse.jgitstats.git.CommitDiffs;
 import com.selesse.jgitstats.git.Commits;
+import com.selesse.jgitstats.graph.DiffChart;
+import com.selesse.jgitstats.template.IndexTemplate;
+import org.apache.velocity.VelocityContext;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.awt.*;
+import java.io.*;
 import java.util.List;
 
 public class Main {
@@ -35,63 +37,41 @@ public class Main {
         LOGGER.info("Found {} commits on {}", commits.size(), branch);
         LOGGER.info("Commits: {}", commits);
 
-        RevCommit thirdCommit = commits.get(0);
-        RevCommit secondCommit = commits.get(1);
-        RevCommit firstCommit = commits.get(2);
+        List<CommitDiff> commitDiffList = Lists.newArrayList();
 
-        RevCommit chosenCommit = thirdCommit;
+        for (int i = 0; i < 1; i++) {
+            RevCommit commit = commits.get(i);
+            List<DiffEntry> diffEntries = CommitDiffs.getDiff(repository, commit);
 
-        printCommitDiff(repository, chosenCommit);
+            for (DiffEntry diffEntry : diffEntries) {
+                CommitDiff commitDiff = new CommitDiff(repository, diffEntry);
+
+                commitDiffList.add(commitDiff);
+            }
+
+        }
 
         repository.close();
+
+        createChartAndIndex(commitDiffList);
     }
 
-    private static void printCommitDiff(Repository repository, RevCommit chosenCommit) throws IOException {
-        List<DiffEntry> diffs = CommitDiffs.getDiff(repository, chosenCommit);
-        LOGGER.info("Found {} diffs for commit {}", diffs.size(), chosenCommit.getName());
+    public static void createChartAndIndex(List<CommitDiff> commitDiffList) throws IOException {
 
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        DiffFormatter diffFormatter = new DiffFormatter(out);
-        diffFormatter.setRepository(repository);
-        diffFormatter.setContext(0);
+        File indexFile = new File("index.html");
+        File diffFile = new File("diff.png");
 
-        int totalAdditions = 0;
-        int totalRemovals = 0;
+        DiffChart diffChart = new DiffChart(commitDiffList);
+        diffChart.writeChart(new FileOutputStream(diffFile));
 
-        for (DiffEntry diffEntry : diffs) {
-            LOGGER.info("Diff stats for {} -> {}", diffEntry.getOldPath(), diffEntry.getNewPath());
-            diffFormatter.format(diffEntry);
+        VelocityContext velocityContext = new VelocityContext();
+        velocityContext.put("diffChart", diffFile.getAbsolutePath());
+        IndexTemplate indexTemplate = new IndexTemplate(velocityContext);
 
-            String diffText = out.toString("UTF-8");
-            List<String> changes = Splitter.onPattern("\r?\n").splitToList(diffText);
-            int numberOfAdditions = 0;
-            int numberOfRemovals = 0;
+        PrintStream printStream = new PrintStream(new FileOutputStream(indexFile));
+        indexTemplate.render(printStream);
 
-            int diffStartPosition = 0;
-            for (String change : changes) {
-                if (change.startsWith("@@")) {
-                    break;
-                }
-                diffStartPosition++;
-            }
-
-            for (String change : changes.subList(diffStartPosition, changes.size())) {
-                if (change.startsWith("+")) {
-                    numberOfAdditions++;
-                }
-                else if (change.startsWith("-")) {
-                    numberOfRemovals++;
-                }
-            }
-
-            totalAdditions += numberOfAdditions;
-            totalRemovals += numberOfRemovals;
-            LOGGER.info("{} additions, {} removals, {} total", numberOfAdditions, numberOfRemovals, numberOfAdditions - numberOfRemovals);
-
-            out.reset();
-        }
-        LOGGER.info("Grand total: {} additions, {} removals, {} total", totalAdditions, totalRemovals, totalAdditions - totalRemovals);
-
-        diffFormatter.release();
+        Desktop desktop = Desktop.getDesktop();
+        desktop.browse(indexFile.toURI());
     }
 }
