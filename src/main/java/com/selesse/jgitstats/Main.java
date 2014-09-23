@@ -1,6 +1,6 @@
 package com.selesse.jgitstats;
 
-import com.google.common.collect.Lists;
+import com.google.common.base.Splitter;
 import com.selesse.jgitstats.git.CommitDiffs;
 import com.selesse.jgitstats.git.Commits;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -47,25 +47,50 @@ public class Main {
     }
 
     private static void printCommitDiff(Repository repository, RevCommit chosenCommit) throws IOException {
-        Commits.printCommitInformation(repository, Lists.newArrayList(chosenCommit), System.out);
-
-
         List<DiffEntry> diffs = CommitDiffs.getDiff(repository, chosenCommit);
         LOGGER.info("Found {} diffs for commit {}", diffs.size(), chosenCommit.getName());
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         DiffFormatter diffFormatter = new DiffFormatter(out);
         diffFormatter.setRepository(repository);
+        diffFormatter.setContext(0);
+
+        int totalAdditions = 0;
+        int totalRemovals = 0;
 
         for (DiffEntry diffEntry : diffs) {
-            System.out.println(diffEntry);
+            LOGGER.info("Diff stats for {} -> {}", diffEntry.getOldPath(), diffEntry.getNewPath());
             diffFormatter.format(diffEntry);
 
             String diffText = out.toString("UTF-8");
-            System.out.println(diffText);
+            List<String> changes = Splitter.onPattern("\r?\n").splitToList(diffText);
+            int numberOfAdditions = 0;
+            int numberOfRemovals = 0;
+
+            int diffStartPosition = 0;
+            for (String change : changes) {
+                if (change.startsWith("@@")) {
+                    break;
+                }
+                diffStartPosition++;
+            }
+
+            for (String change : changes.subList(diffStartPosition, changes.size())) {
+                if (change.startsWith("+")) {
+                    numberOfAdditions++;
+                }
+                else if (change.startsWith("-")) {
+                    numberOfRemovals++;
+                }
+            }
+
+            totalAdditions += numberOfAdditions;
+            totalRemovals += numberOfRemovals;
+            LOGGER.info("{} additions, {} removals, {} total", numberOfAdditions, numberOfRemovals, numberOfAdditions - numberOfRemovals);
 
             out.reset();
         }
+        LOGGER.info("Grand total: {} additions, {} removals, {} total", totalAdditions, totalRemovals, totalAdditions - totalRemovals);
 
         diffFormatter.release();
     }
