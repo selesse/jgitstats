@@ -13,6 +13,7 @@ ext.jgitVersion = '3.4.1.201406201815-r'
 
 dependencies {
     compile 'ch.qos.logback:logback-classic:1.1.2'
+    compile 'com.google.guava:guava:18.+'
     compile "org.eclipse.jgit:org.eclipse.jgit:$jgitVersion"
     compile 'org.slf4j:slf4j-api:1.7.5'
 
