@@ -10,7 +10,7 @@
         </encoder>
     </appender>
 
-    <logger name="com.selesse.jgitstats" level="DEBUG"/>
+    <logger name="com.selesse" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
