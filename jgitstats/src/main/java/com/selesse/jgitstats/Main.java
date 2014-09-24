@@ -47,7 +47,7 @@ public class Main {
             branchName = (String) options.get(CommandLine.Option.BRANCH_NAME);
         }
 
-        runAnalysisOnLastCommit(new File(gitPath), branchName);
+        runAnalysisOnLastCommit(new File(gitPath, ".git"), branchName);
     }
 
     private static boolean isValidGitRoot(String gitPath) {
@@ -61,12 +61,13 @@ public class Main {
     }
 
     private static void runAnalysisOnLastCommit(File gitDir, String branchName) throws Exception {
-        FileRepositoryBuilder builder = new FileRepositoryBuilder();
         LOGGER.info("Looking for a Git repository in {}", gitDir.getAbsolutePath());
-        Repository repository = builder.setGitDir(gitDir)
-                .readEnvironment() // scan environment GIT_* variables
-                .findGitDir() // scan up the file system tree
+        Repository repository = new FileRepositoryBuilder().setGitDir(gitDir)
+                .readEnvironment()
+                .findGitDir()
                 .build();
+
+        LOGGER.info("Found repository with {} refs", repository.getAllRefs().size());
 
         Branch branch = new Branch(repository, branchName);
         List<RevCommit> commits = branch.getCommits();
@@ -75,25 +76,25 @@ public class Main {
 
         List<CommitDiff> commitDiffList = Lists.newArrayList();
 
-        if (commitDiffList.size() > 0) {
-            for (int i = 0; i < 1; i++) {
-                RevCommit commit = commits.get(i);
-                List<DiffEntry> diffEntries = CommitDiffs.getDiff(repository, commit);
+        for (int i = 0; i < 1; i++) {
+            RevCommit commit = commits.get(i);
+            List<DiffEntry> diffEntries = CommitDiffs.getDiff(repository, commit);
 
-                for (DiffEntry diffEntry : diffEntries) {
-                    CommitDiff commitDiff = new CommitDiff(repository, diffEntry);
+            for (DiffEntry diffEntry : diffEntries) {
+                CommitDiff commitDiff = new CommitDiff(repository, diffEntry);
 
-                    commitDiffList.add(commitDiff);
-                }
-                createChartAndIndex(commitDiffList);
+                commitDiffList.add(commitDiff);
             }
+        }
+
+        if (commitDiffList.size() > 0) {
+            createChartAndIndex(commitDiffList);
         }
 
         repository.close();
     }
 
     public static void createChartAndIndex(List<CommitDiff> commitDiffList) throws IOException {
-
         File indexFile = new File("index.html");
         File diffFile = new File("diff.png");
 

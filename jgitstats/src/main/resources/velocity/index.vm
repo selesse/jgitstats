@@ -3,6 +3,5 @@
     <title> JGitStats </title>
 </head>
 <body>
-    Hi
     <img src="$diffChart"/>
 </body>
