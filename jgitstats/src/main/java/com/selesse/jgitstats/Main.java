@@ -1,9 +1,9 @@
 package com.selesse.jgitstats;
 
 import com.google.common.collect.Lists;
-import com.selesse.jgitstats.git.CommitDiff;
-import com.selesse.jgitstats.git.CommitDiffs;
-import com.selesse.jgitstats.git.Commits;
+import com.selesse.jgitwrapper.Branch;
+import com.selesse.jgitwrapper.CommitDiff;
+import com.selesse.jgitwrapper.CommitDiffs;
 import com.selesse.jgitstats.graph.DiffChart;
 import com.selesse.jgitstats.template.IndexTemplate;
 import org.apache.velocity.VelocityContext;
@@ -16,7 +16,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.List;
 
 public class Main {
@@ -31,9 +34,10 @@ public class Main {
                 .findGitDir() // scan up the file system tree
                 .build();
 
-        String branch = "master";
+        String branchName = "master";
 
-        List<RevCommit> commits = Commits.getCommits(repository, branch );
+        Branch branch = new Branch(repository, branchName);
+        List<RevCommit> commits = branch.getCommits();
         LOGGER.info("Found {} commits on {}", commits.size(), branch);
         LOGGER.info("Commits: {}", commits);
 

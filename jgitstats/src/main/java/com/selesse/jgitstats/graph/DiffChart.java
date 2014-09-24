@@ -1,6 +1,6 @@
 package com.selesse.jgitstats.graph;
 
-import com.selesse.jgitstats.git.CommitDiff;
+import com.selesse.jgitwrapper.CommitDiff;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;

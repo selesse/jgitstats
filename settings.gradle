@@ -1,1 +1,4 @@
+include 'jgit-wrapper'
+include 'jgitstats'
+
 rootProject.name = 'jgitstats'

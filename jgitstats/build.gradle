@@ -1,0 +1,23 @@
+apply plugin: 'application'
+apply plugin: 'build-announcements'
+
+mainClassName = 'com.selesse.jgitstats.Main'
+version = '0.1.0'
+
+dependencies {
+    compile project(':jgit-wrapper')
+    compile 'org.apache.velocity:velocity:1.7'
+    compile 'org.jfree:jfreechart:1.0.19'
+}
+
+jar {
+    manifest {
+        attributes (
+            'Manifest-Version': version,
+            'Main-Class': mainClassName,
+            'Created-By': System.getProperty('java.version') + ' (' + System.getProperty('java.vendor') + ')',
+            'Built-With': "gradle-${project.getGradle().getGradleVersion()}, groovy-${GroovySystem.getVersion()}",
+            'Build-Time': new Date(),
+       )
+    }
+}
