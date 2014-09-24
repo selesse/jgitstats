@@ -1,4 +1,13 @@
-include 'jgit-wrapper'
+rootProject.name = 'jgitstats'
+
+include 'git-wrapper'
 include 'jgitstats'
 
-rootProject.name = 'jgitstats'
+rootProject.children.each { project ->
+    String fileBaseName = project.name.replaceAll("\\p{Upper}") { "-${it.toLowerCase()}" }
+    String projectDirName = "$fileBaseName"
+    project.projectDir = new File(settingsDir, projectDirName)
+    project.buildFileName = "${fileBaseName}.gradle"
+    assert project.projectDir.isDirectory()
+    assert project.buildFile.isFile()
+}

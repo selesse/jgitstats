@@ -1,11 +1,12 @@
 package com.selesse.jgitstats;
 
 import com.google.common.collect.Lists;
+import com.selesse.jgitstats.cli.DocOptCli;
+import com.selesse.jgitstats.graph.DiffChart;
+import com.selesse.jgitstats.template.IndexTemplate;
 import com.selesse.jgitwrapper.Branch;
 import com.selesse.jgitwrapper.CommitDiff;
 import com.selesse.jgitwrapper.CommitDiffs;
-import com.selesse.jgitstats.graph.DiffChart;
-import com.selesse.jgitstats.template.IndexTemplate;
 import org.apache.velocity.VelocityContext;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -21,11 +22,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) throws IOException, GitAPIException {
+        DocOptCli docOptCli = new DocOptCli(args);
+        Map<String, Object> options = docOptCli.getOptions();
+
+        LOGGER.info("Got {} from DocOpt", options);
+    }
+
+    private void doSomething() throws Exception {
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
         File gitDir = new File(".git/");
         LOGGER.info("Looking for a Git repository in {}", gitDir.getAbsolutePath());

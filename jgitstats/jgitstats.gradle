@@ -4,10 +4,16 @@ apply plugin: 'build-announcements'
 mainClassName = 'com.selesse.jgitstats.Main'
 version = '0.1.0'
 
+repositories {
+    mavenLocal()
+}
+
+
 dependencies {
-    compile project(':jgit-wrapper')
+    compile project(':git-wrapper')
     compile 'org.apache.velocity:velocity:1.7'
     compile 'org.jfree:jfreechart:1.0.19'
+    compile 'org.docopt:docopt:0.6.0-SNAPSHOT'
 }
 
 jar {
@@ -19,5 +25,14 @@ jar {
             'Built-With': "gradle-${project.getGradle().getGradleVersion()}, groovy-${GroovySystem.getVersion()}",
             'Build-Time': new Date(),
        )
+    }
+}
+
+gradle.taskGraph.whenReady { graph ->
+    // Make a fat JAR, unless we're doing `distTar` or `distZip`
+    if (graph.hasTask(jar) && !graph.hasTask(startScripts)) {
+        jar {
+            from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
     }
 }
