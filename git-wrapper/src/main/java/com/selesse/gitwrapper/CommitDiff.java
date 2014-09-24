@@ -1,4 +1,4 @@
-package com.selesse.jgitwrapper;
+package com.selesse.gitwrapper;
 
 import com.google.common.base.Splitter;
 import org.eclipse.jgit.diff.DiffEntry;
