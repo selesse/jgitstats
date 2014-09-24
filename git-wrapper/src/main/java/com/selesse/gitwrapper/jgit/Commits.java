@@ -1,4 +1,4 @@
-package com.selesse.gitwrapper;
+package com.selesse.gitwrapper.jgit;
 
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;

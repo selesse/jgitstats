@@ -1,4 +1,4 @@
-package com.selesse.gitwrapper;
+package com.selesse.gitwrapper.jgit;
 
 import com.google.common.collect.Lists;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class CommitDiffs {
-    public static List<DiffEntry> getDiff(Repository repository, RevCommit commit) throws IOException {
+    public static List<DiffEntry> getDiffs(Repository repository, RevCommit commit) throws IOException {
         List<DiffEntry> diffEntries = Lists.newArrayList();
 
         RevWalk revWalk = new RevWalk(repository);

@@ -18,7 +18,7 @@ public class CommandLine {
                     "Options:\n" +
                     "  -h --help         Show this screen.\n" +
                     "  -v --version      Show version.\n" +
-                    "  --branch=<name>   Choose branch to run on [default: master].\n";
+                    "  --branch=<name>   Choose branch to run on [default: " + DEFAULT_BRANCH + "].\n";
 
     private CommandLine() {
     }

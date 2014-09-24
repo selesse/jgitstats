@@ -6,7 +6,7 @@ import com.selesse.jgitstats.graph.DiffChart;
 import com.selesse.jgitstats.template.IndexTemplate;
 import com.selesse.gitwrapper.Branch;
 import com.selesse.gitwrapper.CommitDiff;
-import com.selesse.gitwrapper.CommitDiffs;
+import com.selesse.gitwrapper.jgit.CommitDiffs;
 import org.apache.velocity.VelocityContext;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.Repository;
@@ -78,7 +78,7 @@ public class Main {
 
         for (int i = 0; i < 1; i++) {
             RevCommit commit = commits.get(i);
-            List<DiffEntry> diffEntries = CommitDiffs.getDiff(repository, commit);
+            List<DiffEntry> diffEntries = CommitDiffs.getDiffs(repository, commit);
 
             for (DiffEntry diffEntry : diffEntries) {
                 CommitDiff commitDiff = new CommitDiff(repository, diffEntry);
