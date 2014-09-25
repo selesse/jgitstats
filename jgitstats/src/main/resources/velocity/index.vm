@@ -3,5 +3,5 @@
     <title> JGitStats </title>
 </head>
 <body>
-    <img src="$diffChart"/>
+    There are $numberOfCommits commits on $branchName
 </body>

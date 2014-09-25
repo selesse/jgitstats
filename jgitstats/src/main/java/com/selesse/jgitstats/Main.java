@@ -1,26 +1,14 @@
 package com.selesse.jgitstats;
 
-import com.google.common.collect.Lists;
+import com.selesse.gitwrapper.GitDirectory;
 import com.selesse.jgitstats.cli.CommandLine;
-import com.selesse.jgitstats.graph.DiffChart;
-import com.selesse.jgitstats.template.IndexTemplate;
-import com.selesse.gitwrapper.Branch;
-import com.selesse.gitwrapper.CommitDiff;
-import com.selesse.gitwrapper.jgit.CommitDiffs;
-import org.apache.velocity.VelocityContext;
-import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import com.selesse.jgitstats.git.BranchAnalyzer;
+import com.selesse.jgitstats.git.BranchDetails;
+import com.selesse.jgitstats.git.GitReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.List;
 import java.util.Map;
 
 public class Main {
@@ -33,7 +21,7 @@ public class Main {
 
         String gitPath = (String) options.get(CommandLine.Option.GIT_REPO);
 
-        boolean isValidGitPath = isValidGitRoot(gitPath);
+        boolean isValidGitPath = GitDirectory.isValidGitRoot(gitPath);
 
         if (!isValidGitPath) {
             LOGGER.error("Error: {} is an invalid Git root", gitPath);
@@ -47,68 +35,12 @@ public class Main {
             branchName = (String) options.get(CommandLine.Option.BRANCH_NAME);
         }
 
-        runAnalysisOnLastCommit(new File(gitPath, ".git"), branchName);
-    }
+        File gitRoot = new File(gitPath, ".git");
+        LOGGER.debug("Creating a BranchAnalyzer for {} on branch {}", gitRoot.getAbsolutePath(), branchName);
+        BranchAnalyzer branchAnalyzer = new BranchAnalyzer(gitRoot, branchName);
+        BranchDetails branchDetails = branchAnalyzer.getBranchDetails();
 
-    private static boolean isValidGitRoot(String gitPath) {
-        File gitRoot = new File(gitPath);
-        if (!gitRoot.exists() || !gitRoot.isDirectory()) {
-            return false;
-        }
-
-        File gitDirectoryInRoot = new File(gitRoot, ".git");
-        return gitDirectoryInRoot.exists() && gitDirectoryInRoot.isDirectory();
-    }
-
-    private static void runAnalysisOnLastCommit(File gitDir, String branchName) throws Exception {
-        LOGGER.info("Looking for a Git repository in {}", gitDir.getAbsolutePath());
-        Repository repository = new FileRepositoryBuilder().setGitDir(gitDir)
-                .readEnvironment()
-                .findGitDir()
-                .build();
-
-        LOGGER.info("Found repository with {} refs", repository.getAllRefs().size());
-
-        Branch branch = new Branch(repository, branchName);
-        List<RevCommit> commits = branch.getCommits();
-        LOGGER.info("Found {} commits on {}", commits.size(), branch.getName());
-        LOGGER.info("Commits: {}", commits);
-
-        List<CommitDiff> commitDiffList = Lists.newArrayList();
-
-        for (int i = 0; i < 1; i++) {
-            RevCommit commit = commits.get(i);
-            List<DiffEntry> diffEntries = CommitDiffs.getDiffs(repository, commit);
-
-            for (DiffEntry diffEntry : diffEntries) {
-                CommitDiff commitDiff = new CommitDiff(repository, diffEntry);
-
-                commitDiffList.add(commitDiff);
-            }
-        }
-
-        if (commitDiffList.size() > 0) {
-            createChartAndIndex(commitDiffList);
-        }
-
-        repository.close();
-    }
-
-    public static void createChartAndIndex(List<CommitDiff> commitDiffList) throws IOException {
-        File indexFile = new File("index.html");
-        File diffFile = new File("diff.png");
-
-        DiffChart diffChart = new DiffChart(commitDiffList);
-        diffChart.writeChart(new FileOutputStream(diffFile));
-
-        VelocityContext velocityContext = new VelocityContext();
-        velocityContext.put("diffChart", diffFile.getAbsolutePath());
-        IndexTemplate indexTemplate = new IndexTemplate(velocityContext);
-
-        PrintStream printStream = new PrintStream(new FileOutputStream(indexFile));
-        indexTemplate.render(printStream);
-
-        Desktop desktop = Desktop.getDesktop();
-        desktop.browse(indexFile.toURI());
+        GitReporter gitReporter = new GitReporter(branchDetails);
+        gitReporter.generateReport();
     }
 }
