@@ -1,11 +1,7 @@
 package com.selesse.jgitstats.git;
 
-import com.google.common.collect.Lists;
 import com.selesse.gitwrapper.Branch;
-import com.selesse.gitwrapper.CommitDiff;
-import com.selesse.gitwrapper.jgit.CommitDiffs;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -39,23 +35,9 @@ public class BranchAnalyzer {
         Branch branch = new Branch(repository, branchName);
         List<RevCommit> commits = branch.getCommits();
         LOGGER.info("Found {} commits on {}", commits.size(), branch.getName());
-        LOGGER.info("Commits: {}", commits);
-
-        List<CommitDiff> commitDiffList = Lists.newArrayList();
-
-        for (int i = 0; i < 1; i++) {
-            RevCommit commit = commits.get(i);
-            List<DiffEntry> diffEntries = CommitDiffs.getDiffs(repository, commit);
-
-            for (DiffEntry diffEntry : diffEntries) {
-                CommitDiff commitDiff = new CommitDiff(repository, diffEntry);
-
-                commitDiffList.add(commitDiff);
-            }
-        }
 
         repository.close();
 
-        return new BranchDetails(branch, commits, commitDiffList);
+        return new BranchDetails(branch, commits);
     }
 }
