@@ -1,5 +1,6 @@
 package com.selesse.jgitstats;
 
+import com.google.common.io.Files;
 import com.selesse.gitwrapper.RepositoryReader;
 import com.selesse.jgitstats.cli.CommandLine;
 import com.selesse.jgitstats.git.BranchAnalyzer;
@@ -22,6 +23,7 @@ public class Main {
         LOGGER.debug("Got {} from arguments", options);
 
         String gitPath = (String) options.get(CommandLine.Option.GIT_REPO);
+        gitPath = sanitizePath(gitPath);
 
         boolean isValidGitPath = RepositoryReader.isValidGitRoot(gitPath);
 
@@ -44,5 +46,11 @@ public class Main {
 
         GitReporter gitReporter = new GitReporter(branchDetails, new PrintStream(new FileOutputStream("index.html")));
         gitReporter.generateReport();
+    }
+
+    private static String sanitizePath(String gitPath) {
+        String absolutePath = new File(gitPath).getAbsolutePath();
+        absolutePath = Files.simplifyPath(absolutePath);
+        return absolutePath;
     }
 }

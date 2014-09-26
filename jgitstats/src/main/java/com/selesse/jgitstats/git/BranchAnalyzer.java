@@ -38,7 +38,7 @@ public class BranchAnalyzer {
         List<RevCommit> commits = branch.getCommits();
         LOGGER.info("Found {} commits on {}", commits.size(), branch.getName());
 
-        List<GitFile> gitFileList = RepositoryReader.loadRepository(repository, branch);
+        List<GitFile> gitFileList = RepositoryReader.loadRepositoryLastCommit(repository, branch);
 
         repository.close();
 

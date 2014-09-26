@@ -28,7 +28,7 @@ public class RepositoryReader {
         return gitDirectoryInRoot.exists() && gitDirectoryInRoot.isDirectory();
     }
 
-    public static List<GitFile> loadRepository(Repository repository, Branch branch) throws IOException {
+    public static List<GitFile> loadRepositoryLastCommit(Repository repository, Branch branch) throws IOException {
         List<GitFile> gitFileList = Lists.newArrayList();
 
         ObjectId lastCommitId = repository.resolve(branch.getName());
