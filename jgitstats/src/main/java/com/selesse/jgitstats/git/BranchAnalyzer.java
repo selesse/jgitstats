@@ -1,6 +1,8 @@
 package com.selesse.jgitstats.git;
 
 import com.selesse.gitwrapper.Branch;
+import com.selesse.gitwrapper.GitFile;
+import com.selesse.gitwrapper.RepositoryReader;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -36,8 +38,10 @@ public class BranchAnalyzer {
         List<RevCommit> commits = branch.getCommits();
         LOGGER.info("Found {} commits on {}", commits.size(), branch.getName());
 
+        List<GitFile> gitFileList = RepositoryReader.loadRepository(repository, branch);
+
         repository.close();
 
-        return new BranchDetails(branch, commits);
+        return new BranchDetails(branch, commits, gitFileList);
     }
 }

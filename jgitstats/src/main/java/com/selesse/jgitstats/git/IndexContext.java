@@ -3,15 +3,16 @@ package com.selesse.jgitstats.git;
 public enum IndexContext {
     BRANCH_NAME("branchName"),
     NUMBER_OF_COMMITS("numberOfCommits"),
+    GIT_FILES("gitFiles")
     ;
 
-    private final String s;
+    private final String attributeName;
 
-    IndexContext(String s) {
-        this.s = s;
+    IndexContext(String attributeName) {
+        this.attributeName = attributeName;
     }
 
     public String asAttribute() {
-        return s;
+        return attributeName;
     }
 }

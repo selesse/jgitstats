@@ -1,6 +1,6 @@
 package com.selesse.jgitstats;
 
-import com.selesse.gitwrapper.GitDirectory;
+import com.selesse.gitwrapper.RepositoryReader;
 import com.selesse.jgitstats.cli.CommandLine;
 import com.selesse.jgitstats.git.BranchAnalyzer;
 import com.selesse.jgitstats.git.BranchDetails;
@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.Map;
 
 public class Main {
@@ -21,7 +23,7 @@ public class Main {
 
         String gitPath = (String) options.get(CommandLine.Option.GIT_REPO);
 
-        boolean isValidGitPath = GitDirectory.isValidGitRoot(gitPath);
+        boolean isValidGitPath = RepositoryReader.isValidGitRoot(gitPath);
 
         if (!isValidGitPath) {
             LOGGER.error("Error: {} is an invalid Git root", gitPath);
@@ -40,7 +42,7 @@ public class Main {
         BranchAnalyzer branchAnalyzer = new BranchAnalyzer(gitRoot, branchName);
         BranchDetails branchDetails = branchAnalyzer.getBranchDetails();
 
-        GitReporter gitReporter = new GitReporter(branchDetails);
+        GitReporter gitReporter = new GitReporter(branchDetails, new PrintStream(new FileOutputStream("index.html")));
         gitReporter.generateReport();
     }
 }
