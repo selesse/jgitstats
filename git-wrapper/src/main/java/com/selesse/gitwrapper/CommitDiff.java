@@ -52,7 +52,8 @@ public class CommitDiff {
         for (String change : changes.subList(diffStartPosition, changes.size())) {
             if (change.startsWith("+")) {
                 linesAdded++;
-            } else if (change.startsWith("-")) {
+            }
+            else if (change.startsWith("-")) {
                 linesRemoved++;
             }
         }

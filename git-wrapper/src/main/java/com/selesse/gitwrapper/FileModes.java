@@ -6,15 +6,20 @@ public class FileModes {
     public static String asString(FileMode fileMode) {
         if (fileMode.equals(FileMode.EXECUTABLE_FILE)) {
             return "executable file";
-        } else if (fileMode.equals(FileMode.REGULAR_FILE)) {
+        }
+        else if (fileMode.equals(FileMode.REGULAR_FILE)) {
             return "normal file";
-        } else if (fileMode.equals(FileMode.TREE)) {
+        }
+        else if (fileMode.equals(FileMode.TREE)) {
             return "directory";
-        } else if (fileMode.equals(FileMode.SYMLINK)) {
+        }
+        else if (fileMode.equals(FileMode.SYMLINK)) {
             return "symlink";
-        } else if (fileMode.equals(FileMode.GITLINK)) {
+        }
+        else if (fileMode.equals(FileMode.GITLINK)) {
             return "Git link";
-        } else {
+        }
+        else {
             return fileMode.toString();
         }
     }

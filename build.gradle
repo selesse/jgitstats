@@ -8,8 +8,10 @@ buildscript {
 }
 
 subprojects {
-    apply plugin: 'java'
+    apply plugin: 'build-announcements'
+    apply plugin: 'checkstyle'
     apply plugin: 'cobertura'
+    apply plugin: 'java'
 
     repositories {
         mavenCentral()
@@ -22,5 +24,9 @@ subprojects {
 
         testCompile 'junit:junit:4.11'
         testCompile 'org.easytesting:fest-assert-core:2.0M10'
+    }
+
+    checkstyle {
+        configFile = new File(rootDir, "checkstyle.xml")
     }
 }

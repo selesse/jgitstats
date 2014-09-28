@@ -80,7 +80,8 @@ public class RepositoryReaderTest {
 
         try {
             RepositoryReader.loadRepository(gitRoot);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             assertThat(e).hasMessage("Invalid Git root " + gitRoot.getAbsolutePath());
             exceptionWasThrown = true;
         }

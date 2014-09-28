@@ -38,7 +38,8 @@ public class RepositoryReader {
         return new GitRepository(repository);
     }
 
-    public static List<GitFile> loadRepositoryLastCommit(GitRepository gitRepository, Branch branch) throws IOException {
+    public static List<GitFile> loadRepositoryLastCommit(GitRepository gitRepository, Branch branch)
+            throws IOException {
         List<GitFile> gitFileList = Lists.newArrayList();
 
         Repository repository = gitRepository.getRepository();
