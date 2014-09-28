@@ -6,7 +6,6 @@ import com.selesse.gitwrapper.RepositoryReader;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,10 +26,7 @@ public class BranchAnalyzer {
 
     public BranchDetails getBranchDetails() throws IOException, GitAPIException {
         LOGGER.info("Looking for a Git repository in {}", gitRoot.getAbsolutePath());
-        Repository repository = new FileRepositoryBuilder().setGitDir(gitRoot)
-                .readEnvironment()
-                .findGitDir()
-                .build();
+        Repository repository = RepositoryReader.loadRepository(gitRoot);
 
         LOGGER.info("Found repository with {} refs", repository.getAllRefs().size());
 

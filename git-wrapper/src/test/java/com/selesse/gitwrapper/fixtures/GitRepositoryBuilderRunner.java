@@ -1,6 +1,7 @@
 package com.selesse.gitwrapper.fixtures;
 
 import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import org.slf4j.Logger;
@@ -23,6 +24,11 @@ public class GitRepositoryBuilderRunner {
         return this;
     }
 
+    public GitRepositoryBuilderRunner runCommand(String... command) throws IOException, InterruptedException {
+        executeCommandList(Lists.newArrayList(command));
+        return this;
+    }
+
     public GitRepositoryBuilderRunner createFile(String file, String contents) throws FileNotFoundException {
         addFile(file, contents);
         return this;
@@ -35,14 +41,18 @@ public class GitRepositoryBuilderRunner {
     private void executeCommand(String command) throws IOException, InterruptedException {
         List<String> commandSplitBySpace = Splitter.on(" ").splitToList(command);
 
-        ProcessBuilder processBuilder = new ProcessBuilder(commandSplitBySpace);
+        executeCommandList(commandSplitBySpace);
+    }
+
+    private void executeCommandList(List<String> commandList) throws IOException, InterruptedException {
+        ProcessBuilder processBuilder = new ProcessBuilder(commandList);
         processBuilder.directory(temporaryDirectory);
         Process process = processBuilder.start();
         process.waitFor();
 
         InputStream inputStream = process.getInputStream();
 
-        LOGGER.info("Printing output of '{}' to stdout", commandSplitBySpace);
+        LOGGER.info("Printing output of '{}' to stdout", commandList);
         ByteStreams.copy(inputStream, System.out);
     }
 

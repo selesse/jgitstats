@@ -2,6 +2,7 @@ package com.selesse.gitwrapper;
 
 import com.google.common.base.Splitter;
 import com.google.common.io.Files;
+import com.selesse.gitwrapper.fixtures.GitRepositoryBuilder;
 import com.selesse.gitwrapper.fixtures.SimpleGitFixture;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -64,6 +65,28 @@ public class RepositoryReaderTest {
         verifyTextFile(gitFiles.get(1), "some-file-renamed", "");
         verifyTextFile(gitFiles.get(2), "some-other-file", "this is some file\n" + "lol\n");
         verifyExecutableBinaryFile(gitFiles.get(3), "some/binary/file/hello.o");
+    }
+
+    @Test
+    public void testLoadRepository() throws IOException, InterruptedException {
+        GitRepositoryBuilder repositoryBuilder = GitRepositoryBuilder.create().runCommand("git init").build();
+        Repository repository = RepositoryReader.loadRepository(repositoryBuilder.getDirectory());
+
+        assertThat(repository).isNotNull();
+    }
+
+    @Test
+    public void testLoadRepository_throwsException() throws IOException {
+        boolean exceptionWasThrown = false;
+
+        try {
+            RepositoryReader.loadRepository(gitRoot);
+        } catch (IOException e) {
+            assertThat(e).hasMessage("Invalid Git root " + gitRoot.getAbsolutePath());
+            exceptionWasThrown = true;
+        }
+
+        assertThat(exceptionWasThrown).isTrue();
     }
 
     private void verifyExecutableBinaryFile(GitFile gitFile, String path) {
