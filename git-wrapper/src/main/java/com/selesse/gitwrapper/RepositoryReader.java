@@ -7,6 +7,7 @@ import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,14 @@ public class RepositoryReader {
 
         File gitDirectoryInRoot = new File(gitRoot, ".git");
         return gitDirectoryInRoot.isDirectory();
+    }
+
+    public static Repository loadRepository(File directory) throws IOException {
+        if (!isValidGitRoot(directory.getAbsolutePath())) {
+            throw new IOException("Invalid Git root " + directory.getAbsolutePath());
+        }
+
+        return new FileRepositoryBuilder().findGitDir(directory).build();
     }
 
     public static List<GitFile> loadRepositoryLastCommit(Repository repository, Branch branch) throws IOException {
