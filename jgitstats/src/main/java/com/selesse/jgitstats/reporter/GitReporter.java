@@ -2,6 +2,7 @@ package com.selesse.jgitstats.reporter;
 
 import com.google.common.io.Files;
 import com.selesse.jgitstats.git.BranchDetails;
+import com.selesse.jgitstats.template.AuthorsTemplate;
 import com.selesse.jgitstats.template.IndexTemplate;
 import com.selesse.jgitstats.template.LineDiffsTemplate;
 import com.selesse.jgitstats.template.RepositoryHeadTemplate;
@@ -35,15 +36,17 @@ public class GitReporter {
 
     public void generateReport() {
         try {
-            renderIndex(getPrintStream(ReportPage.INDEX));
-            renderRepositoryHead(getPrintStream(ReportPage.REPOSITORY_HEAD));
-            renderLineDiffs(getPrintStream(ReportPage.LINE_DIFFS));
+            renderIndex();
+            renderRepositoryHead();
+            renderLineDiffs();
+            renderAuthor();
         } catch (FileNotFoundException e) {
             LOGGER.error("Error creating report", e);
         }
     }
 
-    private void renderIndex(PrintStream out) {
+    private void renderIndex() throws FileNotFoundException {
+        PrintStream out = getPrintStream(ReportPage.INDEX);
         VelocityContext indexContext = new VelocityContext();
 
         indexContext.put(ReportPageContext.REPOSITORY_NAME.asAttribute(), repositoryName);
@@ -54,7 +57,9 @@ public class GitReporter {
         indexTemplate.render(out);
     }
 
-    private void renderRepositoryHead(PrintStream out) {
+    private void renderRepositoryHead() throws FileNotFoundException {
+        PrintStream out = getPrintStream(ReportPage.REPOSITORY_HEAD);
+
         VelocityContext repositoryHeadContext = new VelocityContext();
 
         repositoryHeadContext.put(ReportPageContext.REPOSITORY_NAME.asAttribute(), repositoryName);
@@ -66,7 +71,9 @@ public class GitReporter {
         repositoryHeadTemplate.render(out);
     }
 
-    private void renderLineDiffs(PrintStream out) {
+    private void renderLineDiffs() throws FileNotFoundException {
+        PrintStream out = getPrintStream(ReportPage.LINE_DIFFS);
+
         VelocityContext lineDiffContext = new VelocityContext();
 
         lineDiffContext.put(ReportPageContext.REPOSITORY_NAME.asAttribute(), repositoryName);
@@ -78,6 +85,18 @@ public class GitReporter {
         lineDiffsTemplate.render(out);
     }
 
+    private void renderAuthor() throws FileNotFoundException {
+        PrintStream out = getPrintStream(ReportPage.AUTHORS);
+
+        VelocityContext authorContext = new VelocityContext();
+
+        authorContext.put(ReportPageContext.REPOSITORY_NAME.asAttribute(), repositoryName);
+        authorContext.put(ReportPageContext.BRANCH_NAME.asAttribute(), branchDetails.getBranch().getName());
+        authorContext.put(ReportPageContext.AUTHOR_TO_COMMIT_MAP.asAttribute(), branchDetails.getAuthorToCommitMap());
+
+        AuthorsTemplate authorsTemplate = new AuthorsTemplate(authorContext);
+        authorsTemplate.render(out);
+    }
 
     private PrintStream getPrintStream(ReportPage reportPage) throws FileNotFoundException {
         String reportPagePath = reportPage.getPath();

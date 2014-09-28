@@ -8,6 +8,7 @@ public enum ReportPageContext {
     GIT_FILES("gitFiles"),
     ADDED_LINES("addedLines"),
     REMOVED_LINES("removedLines"),
+    AUTHOR_TO_COMMIT_MAP("authorToCommitMap"),
     ;
 
     private final String attributeName;

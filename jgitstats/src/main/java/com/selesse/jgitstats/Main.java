@@ -39,7 +39,7 @@ public class Main {
         }
 
         File gitRoot = new File(gitPath);
-        String repositoryName = gitRoot.getParentFile().getName();
+        String repositoryName = gitRoot.getName();
         LOGGER.debug("Creating a BranchAnalyzer for {} on branch {}", gitRoot.getAbsolutePath(), branchName);
         BranchAnalyzer branchAnalyzer = new BranchAnalyzer(gitRoot, branchName);
         BranchDetails branchDetails = branchAnalyzer.getBranchDetails();

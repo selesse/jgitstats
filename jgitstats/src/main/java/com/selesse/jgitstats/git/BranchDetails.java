@@ -1,9 +1,8 @@
 package com.selesse.jgitstats.git;
 
-import com.selesse.gitwrapper.Branch;
-import com.selesse.gitwrapper.CommitDiff;
-import com.selesse.gitwrapper.GitFile;
-import com.selesse.gitwrapper.GitRepository;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.selesse.gitwrapper.*;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +19,16 @@ public class BranchDetails {
     private final List<GitFile> gitFileList;
     private long totalLinesAdded;
     private long totalLinesRemoved;
+    private Multimap<Author, RevCommit> authorToCommitMap;
 
     public BranchDetails(GitRepository repository, Branch branch, List<RevCommit> commits, List<GitFile> gitFileList) {
         this.repository = repository;
         this.branch = branch;
         this.commits = commits;
         this.gitFileList = gitFileList;
+        this.authorToCommitMap = ArrayListMultimap.create();
 
-        calculateTotalLinesChanged(commits);
+        computeMembers(commits);
     }
 
     public List<RevCommit> getCommits() {
@@ -58,11 +59,15 @@ public class BranchDetails {
         return totalLinesAdded;
     }
 
+    public Multimap<Author, RevCommit> getAuthorToCommitMap() {
+        return authorToCommitMap;
+    }
+
     public long getTotalLinesRemoved() {
         return totalLinesRemoved;
     }
 
-    private void calculateTotalLinesChanged(List<RevCommit> commits) {
+    private void computeMembers(List<RevCommit> commits) {
         for (RevCommit revCommit : commits) {
             try {
                 List<CommitDiff> diffs = repository.getCommitDiffs(revCommit);
@@ -70,10 +75,12 @@ public class BranchDetails {
                     totalLinesAdded += diff.getLinesAdded();
                     totalLinesRemoved += diff.getLinesRemoved();
                 }
+
+                Author author = new Author(revCommit.getAuthorIdent());
+                authorToCommitMap.put(author, revCommit);
             } catch (IOException e) {
                 LOGGER.error("Error getting diffs for repository {} and commit {}", repository, revCommit);
             }
         }
-
     }
 }

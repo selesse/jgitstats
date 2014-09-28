@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+    <title> JGitStats - $repositoryName </title>
+</head>
+<body>
+    <h1> $repositoryName on $branchName </h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th> Author </th>
+            <th> Number Of Commits </th>
+        </tr>
+        </thead>
+        <tbody>
+            #foreach ($author in $authorToCommitMap.keySet())
+            <tr>
+                #set ( $commits = $authorToCommitMap.get($author) )
+                <td> $author </td>
+                <td> $commits.size() </td>
+            </tr>
+            #end
+        </tbody>
+    </table>
+
+    <div>
+        <a href="index.html">Index</a>
+    </div>
+</body>
+</html>

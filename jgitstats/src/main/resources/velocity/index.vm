@@ -11,6 +11,7 @@
     <ul>
         <li> <a href="repository-head.html">Files in $branchName</a> </li>
         <li> <a href="line-diffs.html">Diffs in $branchName</a> </li>
+        <li> <a href="authors.html">Authors in $branchName</a> </li>
     </ul>
 </body>
 </html>

@@ -16,6 +16,7 @@
             <th> Number Of Lines </th>
         </tr>
         </thead>
+        <tbody>
         #foreach( $gitFile in $gitFiles )
             <tr>
                 <td> $gitFile.path </td>
@@ -23,6 +24,7 @@
                 <td> #if($gitFile.isBinary())n/a#else$gitFile.numberOfLines#end </td>
             </tr>
         #end
+        </tbody>
     </table>
 
 
