@@ -1,2 +1,4 @@
 0000000000000000000000000000000000000000 2c62176fbd67aa83f214828c9874637ef1031556 Alex Selesse <alex@selesse.com> 1411926529 -0400	commit (initial): Initial commit
 2c62176fbd67aa83f214828c9874637ef1031556 3d9754a63054577f296e7d181ee53740ca821370 Alex Selesse <alex@selesse.com> 1411926583 -0400	commit: Rename/delete some stuff
+3d9754a63054577f296e7d181ee53740ca821370 3bf4bcbcd8f2412fdc44cf8cf783e8d3c4b1ab5a Alex Selesse <alex@selesse.com> 1411931939 -0400	commit: Add binary file in subfolder
+3bf4bcbcd8f2412fdc44cf8cf783e8d3c4b1ab5a 55f747815f9557c0ecdeab1f618f6d612b610bba Alex Selesse <alex@selesse.com> 1411932379 -0400	commit: chmod +755 hello.o

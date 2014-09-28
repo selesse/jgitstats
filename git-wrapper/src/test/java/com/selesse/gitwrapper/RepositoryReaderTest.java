@@ -19,12 +19,13 @@ import static org.fest.assertions.api.Assertions.assertThat;
 
 public class RepositoryReaderTest {
     private File temporaryDirectory;
+    private File gitRoot;
     private File fileInGitRoot;
 
     @Before
     public void setup() throws IOException {
         temporaryDirectory = Files.createTempDir();
-        File gitRoot = new File(temporaryDirectory, ".git");
+        gitRoot = new File(temporaryDirectory, ".git");
 
         boolean gitRootNewFile = gitRoot.mkdir();
         assertThat(gitRootNewFile).isTrue();
@@ -32,6 +33,10 @@ public class RepositoryReaderTest {
         fileInGitRoot = new File(gitRoot, "INDEX");
         boolean fileInGitRootNewFile = fileInGitRoot.createNewFile();
         assertThat(fileInGitRootNewFile).isTrue();
+
+        File anotherFileInGitRoot = new File(gitRoot, ".git");
+        boolean anotherFileInGitRootNewFile = anotherFileInGitRoot.createNewFile();
+        assertThat(anotherFileInGitRootNewFile).isTrue();
     }
 
     @After
@@ -44,6 +49,7 @@ public class RepositoryReaderTest {
         assertThat(RepositoryReader.isValidGitRoot("")).isFalse();
         assertThat(RepositoryReader.isValidGitRoot(temporaryDirectory.getAbsolutePath())).isTrue();
         assertThat(RepositoryReader.isValidGitRoot(fileInGitRoot.getAbsolutePath())).isFalse();
+        assertThat(RepositoryReader.isValidGitRoot(gitRoot.getAbsolutePath())).isFalse();
     }
 
     @Test
@@ -52,17 +58,24 @@ public class RepositoryReaderTest {
         Branch branch = SimpleGitFixture.getBranch();
 
         List<GitFile> gitFiles = RepositoryReader.loadRepositoryLastCommit(repository, branch);
-        assertThat(gitFiles).hasSize(3);
+        assertThat(gitFiles).hasSize(4);
 
-        verifyFile(gitFiles.get(0), "README.md", FileMode.REGULAR_FILE, "README\n");
-        verifyFile(gitFiles.get(1), "some-file-renamed", FileMode.REGULAR_FILE, "");
-        verifyFile(gitFiles.get(2), "some-other-file", FileMode.REGULAR_FILE,
-                "this is some file\n" + "lol\n");
+        verifyTextFile(gitFiles.get(0), "README.md", "README\n");
+        verifyTextFile(gitFiles.get(1), "some-file-renamed", "");
+        verifyTextFile(gitFiles.get(2), "some-other-file", "this is some file\n" + "lol\n");
+        verifyExecutableBinaryFile(gitFiles.get(3), "some/binary/file/hello.o");
     }
 
-    private void verifyFile(GitFile gitFile, String path, FileMode fileMode, String contents) {
+    private void verifyExecutableBinaryFile(GitFile gitFile, String path) {
         assertThat(gitFile.getPath()).isEqualTo(path);
-        assertThat(gitFile.getFileMode()).isEqualTo(fileMode);
+        assertThat(gitFile.getFileMode()).isEqualTo(FileMode.EXECUTABLE_FILE);
+        assertThat(gitFile.isBinary()).isTrue();
+    }
+
+    private void verifyTextFile(GitFile gitFile, String path, String contents) {
+        assertThat(gitFile.getPath()).isEqualTo(path);
+        assertThat(gitFile.getFileMode()).isEqualTo(FileMode.REGULAR_FILE);
+        assertThat(gitFile.isBinary()).isFalse();
 
         List<String> contentList = Splitter.on("\n").splitToList(contents);
 

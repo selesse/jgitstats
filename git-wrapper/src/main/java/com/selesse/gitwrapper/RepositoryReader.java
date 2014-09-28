@@ -25,7 +25,7 @@ public class RepositoryReader {
         }
 
         File gitDirectoryInRoot = new File(gitRoot, ".git");
-        return gitDirectoryInRoot.exists() && gitDirectoryInRoot.isDirectory();
+        return gitDirectoryInRoot.isDirectory();
     }
 
     public static List<GitFile> loadRepositoryLastCommit(Repository repository, Branch branch) throws IOException {
@@ -49,7 +49,8 @@ public class RepositoryReader {
                 treeWalk.enterSubtree();
             }
             else {
-                ObjectLoader objectLoader = repository.open(treeWalk.getObjectId(objectIdIndex));
+                ObjectId objectId = treeWalk.getObjectId(objectIdIndex);
+                ObjectLoader objectLoader = repository.open(objectId);
                 byte[] fileBytes = objectLoader.getBytes();
 
                 GitFile gitFile = new GitFile(pathString, treeWalk.getFileMode(objectIdIndex), fileBytes);
