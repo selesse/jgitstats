@@ -11,4 +11,24 @@ Goals:
 
 Ideas:
 
-* Dynamic/static mode
+1. Dynamic/static mode. Query-able API to return JSON so graphs can be done
+   client-side.
+
+2. In the global diff page, allow user to see all the files in the repository,
+   with the number of changes to the files. When you click on that file's page,
+   you can see all the diff +/-s, maybe even the file at that revision? You'd
+   be able to see the renames, too!
+
+3. A way to see files that are no longer in the project?
+
+4. Characterize the project's commits
+
+TODOs:
+
+1. Per-user +/- contributions. Can we intelligently detect author renames?
+   If I am `Alex Selesse <selesse@gmail.com>` then I become
+   `Alex Selesse <alex@selesse.com>` and I never commit from
+   `selesse@gmail.com` again, can I detect that programmatically?
+
+
+2. Average commit length
