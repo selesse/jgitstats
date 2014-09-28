@@ -3,6 +3,7 @@
 <head>
     <title> JGitStats </title>
 </head>
+#set( $netLines = $addedLines - $removedLines)
 <body>
     <h2>
         <span class="branchName">$branchName</span>
@@ -10,5 +11,7 @@
 
     Excluding binary files, and ignoring renames, there have been
         $addedLines lines added, and $removedLines lines removed.
+
+    The net result is $netLines lines of text.
 </body>
 </html>
