@@ -24,5 +24,10 @@
             </tr>
         #end
     </table>
+
+
+    <div>
+        <a href="index.html">Index</a>
+    </div>
 </body>
 </html>

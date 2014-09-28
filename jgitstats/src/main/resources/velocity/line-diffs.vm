@@ -11,5 +11,9 @@
         $addedLines lines added, and $removedLines lines removed.
 
     The net result is $netLines lines of text.
+
+    <div>
+        <a href="index.html">Index</a>
+    </div>
 </body>
 </html>

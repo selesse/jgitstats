@@ -71,8 +71,6 @@ public class BranchDetails {
                 for (DiffEntry diff : diffs) {
                     CommitDiff commitDiff = new CommitDiff(repository, diff);
 
-                    LOGGER.debug("{}: +{}, -{}",
-                            commitDiff.getNewPath(), commitDiff.getLinesAdded(), commitDiff.getLinesRemoved());
                     totalLinesAdded += commitDiff.getLinesAdded();
                     totalLinesRemoved += commitDiff.getLinesRemoved();
                 }
