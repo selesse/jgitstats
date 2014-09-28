@@ -1,6 +1,7 @@
 package com.selesse.gitwrapper.jgit;
 
 import com.google.common.collect.Lists;
+import com.selesse.gitwrapper.CommitDiff;
 import com.selesse.gitwrapper.GitRepository;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
@@ -16,7 +17,19 @@ import java.io.IOException;
 import java.util.List;
 
 public class CommitDiffs {
-    public static List<DiffEntry> getDiffs(GitRepository gitRepository, RevCommit commit) throws IOException {
+    public static List<CommitDiff> getCommitDiffs(GitRepository gitRepository, RevCommit commit) throws IOException {
+        List<CommitDiff> commitDiffList = Lists.newArrayList();
+
+        List<DiffEntry> diffEntries = getDiffs(gitRepository, commit);
+        for (DiffEntry diffEntry : diffEntries) {
+            CommitDiff commitDiff = new CommitDiff(gitRepository, diffEntry);
+            commitDiffList.add(commitDiff);
+        }
+
+        return commitDiffList;
+    }
+
+    private static List<DiffEntry> getDiffs(GitRepository gitRepository, RevCommit commit) throws IOException {
         List<DiffEntry> diffEntries = Lists.newArrayList();
 
         Repository repository = gitRepository.getRepository();

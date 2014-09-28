@@ -5,7 +5,6 @@ import com.selesse.gitwrapper.CommitDiff;
 import com.selesse.gitwrapper.GitFile;
 import com.selesse.gitwrapper.GitRepository;
 import com.selesse.gitwrapper.jgit.CommitDiffs;
-import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,12 +66,10 @@ public class BranchDetails {
     private void calculateTotalLinesChanged(List<RevCommit> commits) {
         for (RevCommit revCommit : commits) {
             try {
-                List<DiffEntry> diffs = CommitDiffs.getDiffs(repository, revCommit);
-                for (DiffEntry diff : diffs) {
-                    CommitDiff commitDiff = new CommitDiff(repository, diff);
-
-                    totalLinesAdded += commitDiff.getLinesAdded();
-                    totalLinesRemoved += commitDiff.getLinesRemoved();
+                List<CommitDiff> diffs = CommitDiffs.getCommitDiffs(repository, revCommit);
+                for (CommitDiff diff : diffs) {
+                    totalLinesAdded += diff.getLinesAdded();
+                    totalLinesRemoved += diff.getLinesRemoved();
                 }
             } catch (IOException e) {
                 LOGGER.error("Error getting diffs for repository {} and commit {}", repository, revCommit);
