@@ -5,9 +5,7 @@
 </head>
 #set( $netLines = $addedLines - $removedLines)
 <body>
-    <h2>
-        <span class="branchName">$branchName</span>
-    </h2>
+    <h1> Diffs in $repositoryName on $branchName </h1>
 
     Excluding binary files, and ignoring renames, there have been
         $addedLines lines added, and $removedLines lines removed.

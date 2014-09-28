@@ -1,6 +1,7 @@
 package com.selesse.jgitstats.template.context;
 
 public enum ReportPageContext {
+    REPOSITORY_NAME("repositoryName"),
     BRANCH_NAME("branchName"),
     NUMBER_OF_COMMITS("numberOfCommits"),
     TOTAL_LINES("totalLines"),

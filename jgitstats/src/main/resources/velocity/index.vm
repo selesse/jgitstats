@@ -1,10 +1,12 @@
 <!doctype html>
 <html>
 <head>
-    <title> JGitStats </title>
+    <title> JGitStats - $repositoryName </title>
 </head>
 <body>
-    There are $numberOfCommits commits on <span class="branchName">$branchName</span>
+    <h1> $repositoryName </h1>
+
+    There are $numberOfCommits commits on <span class="branchName">$branchName</span> in $repositoryName
 
     <ul>
         <li> <a href="repository-head.html">Files in $branchName</a> </li>

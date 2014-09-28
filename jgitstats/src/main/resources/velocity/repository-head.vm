@@ -4,7 +4,7 @@
     <title> JGitStats </title>
 </head>
 <body>
-    <h1> Files in $branchName </h1>
+    <h1> Files in $repositoryName on $branchName </h1>
 
     There are a total of $totalLines lines of text in this repository.
 

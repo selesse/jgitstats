@@ -39,11 +39,12 @@ public class Main {
         }
 
         File gitRoot = new File(gitPath, ".git");
+        String repositoryName = gitRoot.getParentFile().getName();
         LOGGER.debug("Creating a BranchAnalyzer for {} on branch {}", gitRoot.getAbsolutePath(), branchName);
         BranchAnalyzer branchAnalyzer = new BranchAnalyzer(gitRoot, branchName);
         BranchDetails branchDetails = branchAnalyzer.getBranchDetails();
 
-        GitReporter gitReporter = new GitReporter(branchDetails, ".");
+        GitReporter gitReporter = new GitReporter(repositoryName, branchDetails, ".");
         gitReporter.generateReport();
 
         Browser.openPage(gitReporter.getIndexAbsolutePath());

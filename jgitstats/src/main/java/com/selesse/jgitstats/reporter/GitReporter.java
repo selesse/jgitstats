@@ -18,10 +18,12 @@ import java.io.PrintStream;
 public class GitReporter {
     private static final Logger LOGGER = LoggerFactory.getLogger(GitReporter.class);
 
+    private final String repositoryName;
     private final BranchDetails branchDetails;
     private final String baseDirectory;
 
-    public GitReporter(BranchDetails branchDetails, String baseDirectory) {
+    public GitReporter(String repositoryName, BranchDetails branchDetails, String baseDirectory) {
+        this.repositoryName = repositoryName;
         this.branchDetails = branchDetails;
         this.baseDirectory = baseDirectory;
     }
@@ -44,6 +46,7 @@ public class GitReporter {
     private void renderIndex(PrintStream out) {
         VelocityContext indexContext = new VelocityContext();
 
+        indexContext.put(ReportPageContext.REPOSITORY_NAME.asAttribute(), repositoryName);
         indexContext.put(ReportPageContext.NUMBER_OF_COMMITS.asAttribute(), branchDetails.getCommits().size());
         indexContext.put(ReportPageContext.BRANCH_NAME.asAttribute(), branchDetails.getBranch().getName());
 
@@ -54,6 +57,7 @@ public class GitReporter {
     private void renderRepositoryHead(PrintStream out) {
         VelocityContext repositoryHeadContext = new VelocityContext();
 
+        repositoryHeadContext.put(ReportPageContext.REPOSITORY_NAME.asAttribute(), repositoryName);
         repositoryHeadContext.put(ReportPageContext.BRANCH_NAME.asAttribute(), branchDetails.getBranch().getName());
         repositoryHeadContext.put(ReportPageContext.GIT_FILES.asAttribute(), branchDetails.getGitFileList());
         repositoryHeadContext.put(ReportPageContext.TOTAL_LINES.asAttribute(), branchDetails.getTotalNumberOfLines());
@@ -65,6 +69,7 @@ public class GitReporter {
     private void renderLineDiffs(PrintStream out) {
         VelocityContext lineDiffContext = new VelocityContext();
 
+        lineDiffContext.put(ReportPageContext.REPOSITORY_NAME.asAttribute(), repositoryName);
         lineDiffContext.put(ReportPageContext.BRANCH_NAME.asAttribute(), branchDetails.getBranch().getName());
         lineDiffContext.put(ReportPageContext.ADDED_LINES.asAttribute(), branchDetails.getTotalLinesAdded());
         lineDiffContext.put(ReportPageContext.REMOVED_LINES.asAttribute(), branchDetails.getTotalLinesRemoved());
