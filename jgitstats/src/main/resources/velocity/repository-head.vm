@@ -2,14 +2,11 @@
 <html>
 <head>
     <title> JGitStats </title>
-    <style type="text/css">
-        .branchName {
-            color: #e9967a;
-        }
-    </style>
 </head>
 <body>
     <h1> Files in $branchName </h1>
+
+    There are a total of $totalLines lines of text in this repository.
 
     <table>
         <thead>

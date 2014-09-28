@@ -42,6 +42,6 @@ public class BranchAnalyzer {
 
         repository.close();
 
-        return new BranchDetails(branch, commits, gitFileList);
+        return new BranchDetails(repository, branch, commits, gitFileList);
     }
 }

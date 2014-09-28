@@ -1,4 +1,4 @@
-# jgitstats
+# JGitStats
 
 Yet another program for displaying stats about a Git repository.
 

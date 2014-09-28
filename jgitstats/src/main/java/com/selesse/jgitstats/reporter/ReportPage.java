@@ -3,6 +3,7 @@ package com.selesse.jgitstats.reporter;
 public enum ReportPage {
     INDEX("index.html"),
     REPOSITORY_HEAD("repository-head.html"),
+    LINE_DIFFS("line-diffs.html")
     ;
 
     private final String relativePath;

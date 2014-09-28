@@ -2,15 +2,13 @@
 <html>
 <head>
     <title> JGitStats </title>
-    <style type="text/css">
-        .branchName {
-            color: #e9967a;
-        }
-    </style>
 </head>
 <body>
     There are $numberOfCommits commits on <span class="branchName">$branchName</span>
 
-    <a href="repository-head.html">Files in $branchName</a>
+    <ul>
+        <li> <a href="repository-head.html">Files in $branchName</a> </li>
+        <li> <a href="line-diffs.html">Diffs in $branchName</a> </li>
+    </ul>
 </body>
 </html>

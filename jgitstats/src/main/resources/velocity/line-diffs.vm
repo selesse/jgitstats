@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+<head>
+    <title> JGitStats </title>
+</head>
+<body>
+    <h2>
+        <span class="branchName">$branchName</span>
+    </h2>
+
+    Excluding binary files, and ignoring renames, there have been
+        $addedLines lines added, and $removedLines lines removed.
+</body>
+</html>

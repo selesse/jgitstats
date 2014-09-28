@@ -3,6 +3,7 @@ package com.selesse.jgitstats.reporter;
 import com.google.common.io.Files;
 import com.selesse.jgitstats.git.BranchDetails;
 import com.selesse.jgitstats.template.IndexTemplate;
+import com.selesse.jgitstats.template.LineDiffsTemplate;
 import com.selesse.jgitstats.template.RepositoryHeadTemplate;
 import com.selesse.jgitstats.template.context.ReportPageContext;
 import org.apache.velocity.VelocityContext;
@@ -25,27 +26,19 @@ public class GitReporter {
         this.baseDirectory = baseDirectory;
     }
 
-    public void generateReport() {
-        try {
-            renderIndex(getPrintStream(ReportPage.INDEX));
-            renderRepositoryHead(getPrintStream(ReportPage.REPOSITORY_HEAD));
-        } catch (FileNotFoundException e) {
-            LOGGER.error("Error creating report", e);
-        }
-    }
-
     public String getIndexAbsolutePath() {
         File indexFile = new File(baseDirectory, ReportPage.INDEX.getPath());
         return Files.simplifyPath(indexFile.getAbsolutePath());
     }
 
-    private void renderRepositoryHead(PrintStream out) {
-        VelocityContext repositoryHeadContext = new VelocityContext();
-        repositoryHeadContext.put(ReportPageContext.BRANCH_NAME.asAttribute(), branchDetails.getBranch().getName());
-        repositoryHeadContext.put(ReportPageContext.GIT_FILES.asAttribute(), branchDetails.getGitFileList());
-
-        RepositoryHeadTemplate repositoryHeadTemplate = new RepositoryHeadTemplate(repositoryHeadContext);
-        repositoryHeadTemplate.render(out);
+    public void generateReport() {
+        try {
+            renderIndex(getPrintStream(ReportPage.INDEX));
+            renderRepositoryHead(getPrintStream(ReportPage.REPOSITORY_HEAD));
+            renderLineDiffs(getPrintStream(ReportPage.LINE_DIFFS));
+        } catch (FileNotFoundException e) {
+            LOGGER.error("Error creating report", e);
+        }
     }
 
     private void renderIndex(PrintStream out) {
@@ -57,6 +50,29 @@ public class GitReporter {
         IndexTemplate indexTemplate = new IndexTemplate(indexContext);
         indexTemplate.render(out);
     }
+
+    private void renderRepositoryHead(PrintStream out) {
+        VelocityContext repositoryHeadContext = new VelocityContext();
+
+        repositoryHeadContext.put(ReportPageContext.BRANCH_NAME.asAttribute(), branchDetails.getBranch().getName());
+        repositoryHeadContext.put(ReportPageContext.GIT_FILES.asAttribute(), branchDetails.getGitFileList());
+        repositoryHeadContext.put(ReportPageContext.TOTAL_LINES.asAttribute(), branchDetails.getTotalNumberOfLines());
+
+        RepositoryHeadTemplate repositoryHeadTemplate = new RepositoryHeadTemplate(repositoryHeadContext);
+        repositoryHeadTemplate.render(out);
+    }
+
+    private void renderLineDiffs(PrintStream out) {
+        VelocityContext lineDiffContext = new VelocityContext();
+
+        lineDiffContext.put(ReportPageContext.BRANCH_NAME.asAttribute(), branchDetails.getBranch().getName());
+        lineDiffContext.put(ReportPageContext.ADDED_LINES.asAttribute(), branchDetails.getTotalLinesAdded());
+        lineDiffContext.put(ReportPageContext.REMOVED_LINES.asAttribute(), branchDetails.getTotalLinesRemoved());
+
+        LineDiffsTemplate lineDiffsTemplate = new LineDiffsTemplate(lineDiffContext);
+        lineDiffsTemplate.render(out);
+    }
+
 
     private PrintStream getPrintStream(ReportPage reportPage) throws FileNotFoundException {
         String reportPagePath = reportPage.getPath();
