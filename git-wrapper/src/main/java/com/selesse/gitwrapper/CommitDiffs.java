@@ -1,8 +1,6 @@
-package com.selesse.gitwrapper.jgit;
+package com.selesse.gitwrapper;
 
 import com.google.common.collect.Lists;
-import com.selesse.gitwrapper.CommitDiff;
-import com.selesse.gitwrapper.GitRepository;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.RawTextComparator;
@@ -40,19 +38,22 @@ public class CommitDiffs {
             parent = revWalk.parseCommit(commit.getParent(0).getId());
         }
 
-        DiffFormatter df = new DiffFormatter(DisabledOutputStream.INSTANCE);
-        df.setRepository(repository);
-        df.setDiffComparator(RawTextComparator.DEFAULT);
-        df.setDetectRenames(true);
+        DiffFormatter diffFormatter = new DiffFormatter(DisabledOutputStream.INSTANCE);
+        diffFormatter.setRepository(repository);
+        diffFormatter.setDiffComparator(RawTextComparator.DEFAULT);
+        diffFormatter.setDetectRenames(true);
 
         List<DiffEntry> diffs;
         if (parent == null) {
-            diffs = df.scan(new EmptyTreeIterator(),
-                    new CanonicalTreeParser(null, revWalk.getObjectReader(), commit.getTree()));
+            EmptyTreeIterator emptyTreeIterator = new EmptyTreeIterator();
+            CanonicalTreeParser canonicalTreeParser =
+                    new CanonicalTreeParser(null, revWalk.getObjectReader(), commit.getTree());
+            diffs = diffFormatter.scan(emptyTreeIterator, canonicalTreeParser);
         }
         else {
-            diffs = df.scan(parent.getTree(), commit.getTree());
+            diffs = diffFormatter.scan(parent.getTree(), commit.getTree());
         }
+
         for (DiffEntry diff : diffs) {
             diffEntries.add(diff);
         }

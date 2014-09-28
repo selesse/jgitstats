@@ -1,6 +1,5 @@
 package com.selesse.gitwrapper;
 
-import com.selesse.gitwrapper.jgit.CommitDiffs;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 

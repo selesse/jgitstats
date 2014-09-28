@@ -4,7 +4,7 @@ import com.selesse.gitwrapper.Branch;
 import com.selesse.gitwrapper.CommitDiff;
 import com.selesse.gitwrapper.GitFile;
 import com.selesse.gitwrapper.GitRepository;
-import com.selesse.gitwrapper.jgit.CommitDiffs;
+import com.selesse.gitwrapper.CommitDiffs;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
