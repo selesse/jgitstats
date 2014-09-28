@@ -3,7 +3,6 @@ package com.selesse.gitwrapper;
 import com.google.common.base.Splitter;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
-import org.eclipse.jgit.lib.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,14 +12,14 @@ import java.util.List;
 
 public class CommitDiff {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommitDiff.class);
-    private final Repository repository;
+    private final GitRepository repository;
 
     private String oldPath;
     private String newPath;
     private int linesAdded;
     private int linesRemoved;
 
-    public CommitDiff(Repository repository, DiffEntry diffEntry) throws IOException {
+    public CommitDiff(GitRepository repository, DiffEntry diffEntry) throws IOException {
         this.repository = repository;
         this.oldPath = diffEntry.getOldPath();
         this.newPath = diffEntry.getNewPath();
@@ -33,7 +32,7 @@ public class CommitDiff {
     private void calculateLines(DiffEntry diffEntry) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         DiffFormatter diffFormatter = new DiffFormatter(out);
-        diffFormatter.setRepository(repository);
+        diffFormatter.setRepository(repository.getRepository());
         diffFormatter.setContext(0);
 
         LOGGER.info("Diff stats for {} -> {}", diffEntry.getOldPath(), diffEntry.getNewPath());

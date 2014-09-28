@@ -2,9 +2,9 @@ package com.selesse.jgitstats.git;
 
 import com.selesse.gitwrapper.Branch;
 import com.selesse.gitwrapper.GitFile;
+import com.selesse.gitwrapper.GitRepository;
 import com.selesse.gitwrapper.RepositoryReader;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,17 +26,13 @@ public class BranchAnalyzer {
 
     public BranchDetails getBranchDetails() throws IOException, GitAPIException {
         LOGGER.info("Looking for a Git repository in {}", gitRoot.getAbsolutePath());
-        Repository repository = RepositoryReader.loadRepository(gitRoot);
+        GitRepository repository = RepositoryReader.loadRepository(gitRoot);
 
-        LOGGER.info("Found repository with {} refs", repository.getAllRefs().size());
-
-        Branch branch = new Branch(repository, branchName);
+        Branch branch = repository.getBranch(branchName);
         List<RevCommit> commits = branch.getCommits();
         LOGGER.info("Found {} commits on {}", commits.size(), branch.getName());
 
         List<GitFile> gitFileList = RepositoryReader.loadRepositoryLastCommit(repository, branch);
-
-        repository.close();
 
         return new BranchDetails(repository, branch, commits, gitFileList);
     }

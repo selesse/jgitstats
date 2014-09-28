@@ -3,9 +3,9 @@ package com.selesse.jgitstats.git;
 import com.selesse.gitwrapper.Branch;
 import com.selesse.gitwrapper.CommitDiff;
 import com.selesse.gitwrapper.GitFile;
+import com.selesse.gitwrapper.GitRepository;
 import com.selesse.gitwrapper.jgit.CommitDiffs;
 import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,14 +16,14 @@ import java.util.List;
 public class BranchDetails {
     private static final Logger LOGGER = LoggerFactory.getLogger(BranchDetails.class);
 
-    private Repository repository;
+    private GitRepository repository;
     private final Branch branch;
     private final List<RevCommit> commits;
     private final List<GitFile> gitFileList;
     private long totalLinesAdded;
     private long totalLinesRemoved;
 
-    public BranchDetails(Repository repository, Branch branch, List<RevCommit> commits, List<GitFile> gitFileList) {
+    public BranchDetails(GitRepository repository, Branch branch, List<RevCommit> commits, List<GitFile> gitFileList) {
         this.repository = repository;
         this.branch = branch;
         this.commits = commits;

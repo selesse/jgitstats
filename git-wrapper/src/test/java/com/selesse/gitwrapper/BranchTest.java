@@ -2,7 +2,6 @@ package com.selesse.gitwrapper;
 
 import com.selesse.gitwrapper.fixtures.GitRepositoryBuilder;
 import com.selesse.gitwrapper.fixtures.SimpleGitFixture;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
 
@@ -41,8 +40,8 @@ public class BranchTest {
                 build();
 
         File directory = repositoryBuilder.getDirectory();
-        Repository repository = RepositoryReader.loadRepository(directory);
-        Branch branch = new Branch(repository, "master");
+        GitRepository repository = RepositoryReader.loadRepository(directory);
+        Branch branch = repository.getBranch("master");
         List<RevCommit> commits = branch.getCommits();
 
         repositoryBuilder.cleanUp();
@@ -67,12 +66,12 @@ public class BranchTest {
                 build();
 
         File directory = repositoryBuilder.getDirectory();
-        Repository repository = RepositoryReader.loadRepository(directory);
+        GitRepository repository = RepositoryReader.loadRepository(directory);
 
-        Branch masterBranch = new Branch(repository, "master");
+        Branch masterBranch = repository.getBranch("master");
         List<RevCommit> masterCommits = masterBranch.getCommits();
 
-        Branch newBranch = new Branch(repository, "newBranch");
+        Branch newBranch = repository.getBranch("newBranch");
         List<RevCommit> newBranchCommits = newBranch.getCommits();
 
         repositoryBuilder.cleanUp();

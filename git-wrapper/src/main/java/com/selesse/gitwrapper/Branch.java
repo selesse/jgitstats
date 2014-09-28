@@ -18,7 +18,7 @@ public class Branch {
     private String name;
     private List<RevCommit> revCommitList;
 
-    public Branch(Repository repository, String name) {
+    Branch(Repository repository, String name) {
         this.repository = repository;
         this.name = name;
     }

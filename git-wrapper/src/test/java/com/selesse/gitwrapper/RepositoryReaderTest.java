@@ -7,7 +7,6 @@ import com.selesse.gitwrapper.fixtures.SimpleGitFixture;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.FileMode;
-import org.eclipse.jgit.lib.Repository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +54,7 @@ public class RepositoryReaderTest {
 
     @Test
     public void testLoadRepositoryLastCommit() throws IOException, GitAPIException {
-        Repository repository = SimpleGitFixture.getRepository();
+        GitRepository repository = SimpleGitFixture.getRepository();
         Branch branch = SimpleGitFixture.getBranch();
 
         List<GitFile> gitFiles = RepositoryReader.loadRepositoryLastCommit(repository, branch);
@@ -70,7 +69,7 @@ public class RepositoryReaderTest {
     @Test
     public void testLoadRepository() throws IOException, InterruptedException {
         GitRepositoryBuilder repositoryBuilder = GitRepositoryBuilder.create().runCommand("git init").build();
-        Repository repository = RepositoryReader.loadRepository(repositoryBuilder.getDirectory());
+        GitRepository repository = RepositoryReader.loadRepository(repositoryBuilder.getDirectory());
 
         assertThat(repository).isNotNull();
     }

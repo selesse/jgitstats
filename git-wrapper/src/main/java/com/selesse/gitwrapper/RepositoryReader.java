@@ -29,16 +29,19 @@ public class RepositoryReader {
         return gitDirectoryInRoot.isDirectory();
     }
 
-    public static Repository loadRepository(File directory) throws IOException {
+    public static GitRepository loadRepository(File directory) throws IOException {
         if (!isValidGitRoot(directory.getAbsolutePath())) {
             throw new IOException("Invalid Git root " + directory.getAbsolutePath());
         }
 
-        return new FileRepositoryBuilder().findGitDir(directory).build();
+        Repository repository = new FileRepositoryBuilder().findGitDir(directory).build();
+        return new GitRepository(repository);
     }
 
-    public static List<GitFile> loadRepositoryLastCommit(Repository repository, Branch branch) throws IOException {
+    public static List<GitFile> loadRepositoryLastCommit(GitRepository gitRepository, Branch branch) throws IOException {
         List<GitFile> gitFileList = Lists.newArrayList();
+
+        Repository repository = gitRepository.getRepository();
 
         ObjectId lastCommitId = repository.resolve(branch.getName());
         RevWalk revWalk = new RevWalk(repository);
