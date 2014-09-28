@@ -24,8 +24,8 @@ public class GitRepositoryBuilderRunner {
         return this;
     }
 
-    public GitRepositoryBuilderRunner runCommand(String... command) throws IOException, InterruptedException {
-        executeCommandList(Lists.newArrayList(command));
+    public GitRepositoryBuilderRunner runCommand(String... commandList) throws IOException, InterruptedException {
+        executeCommandList(Lists.newArrayList(commandList));
         return this;
     }
 

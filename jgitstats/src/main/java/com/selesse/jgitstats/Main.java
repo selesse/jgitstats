@@ -38,7 +38,7 @@ public class Main {
             branchName = (String) options.get(CommandLine.Option.BRANCH_NAME);
         }
 
-        File gitRoot = new File(gitPath, ".git");
+        File gitRoot = new File(gitPath);
         String repositoryName = gitRoot.getParentFile().getName();
         LOGGER.debug("Creating a BranchAnalyzer for {} on branch {}", gitRoot.getAbsolutePath(), branchName);
         BranchAnalyzer branchAnalyzer = new BranchAnalyzer(gitRoot, branchName);
