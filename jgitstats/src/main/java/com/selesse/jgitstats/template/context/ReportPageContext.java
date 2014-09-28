@@ -1,6 +1,6 @@
-package com.selesse.jgitstats.git;
+package com.selesse.jgitstats.template.context;
 
-public enum IndexContext {
+public enum ReportPageContext {
     BRANCH_NAME("branchName"),
     NUMBER_OF_COMMITS("numberOfCommits"),
     GIT_FILES("gitFiles")
@@ -8,7 +8,7 @@ public enum IndexContext {
 
     private final String attributeName;
 
-    IndexContext(String attributeName) {
+    ReportPageContext(String attributeName) {
         this.attributeName = attributeName;
     }
 

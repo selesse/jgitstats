@@ -21,6 +21,9 @@ public class VelocityTemplate {
 
     public VelocityTemplate(VelocityContext velocityContext, String templatePath) {
         this.velocityContext = velocityContext;
+        if (!templatePath.startsWith("velocity/")) {
+            templatePath = "velocity/" + templatePath;
+        }
         this.templatePath = templatePath;
     }
 

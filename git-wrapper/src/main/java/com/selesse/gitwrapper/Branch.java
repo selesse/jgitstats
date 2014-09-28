@@ -40,7 +40,6 @@ public class Branch {
                 String currentBranchName = branch.getName();
                 String desiredBranch = Constants.R_HEADS + name;
                 if (!desiredBranch.equals(currentBranchName)) {
-                    LOGGER.debug("Current branch {} is not {}", currentBranchName, name);
                     continue;
                 }
 

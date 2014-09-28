@@ -2,16 +2,15 @@ package com.selesse.jgitstats;
 
 import com.google.common.io.Files;
 import com.selesse.gitwrapper.RepositoryReader;
+import com.selesse.jgitstats.browser.Browser;
 import com.selesse.jgitstats.cli.CommandLine;
 import com.selesse.jgitstats.git.BranchAnalyzer;
 import com.selesse.jgitstats.git.BranchDetails;
-import com.selesse.jgitstats.git.GitReporter;
+import com.selesse.jgitstats.reporter.GitReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.util.Map;
 
 public class Main {
@@ -44,8 +43,10 @@ public class Main {
         BranchAnalyzer branchAnalyzer = new BranchAnalyzer(gitRoot, branchName);
         BranchDetails branchDetails = branchAnalyzer.getBranchDetails();
 
-        GitReporter gitReporter = new GitReporter(branchDetails, new PrintStream(new FileOutputStream("index.html")));
+        GitReporter gitReporter = new GitReporter(branchDetails, ".");
         gitReporter.generateReport();
+
+        Browser.openPage(gitReporter.getIndexAbsolutePath());
     }
 
     private static String sanitizePath(String gitPath) {

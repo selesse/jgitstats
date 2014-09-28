@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+    <title> JGitStats </title>
+    <style type="text/css">
+        .branchName {
+            color: #e9967a;
+        }
+    </style>
+</head>
+<body>
+    <h1> Files in $branchName </h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th> Path </th>
+            <th> Is Binary? </th>
+            <th> Number Of Lines </th>
+        </tr>
+        </thead>
+        #foreach( $gitFile in $gitFiles )
+            <tr>
+                <td> $gitFile.path </td>
+                <td> $gitFile.isBinary() </td>
+                <td> #if($gitFile.isBinary())n/a#else$gitFile.numberOfLines#end </td>
+            </tr>
+        #end
+    </table>
+</body>
+</html>
