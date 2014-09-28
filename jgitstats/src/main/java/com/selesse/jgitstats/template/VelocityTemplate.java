@@ -41,7 +41,8 @@ public class VelocityTemplate {
         Template template = velocityEngine.getTemplate(templatePath);
 
         VelocityContext context = getVelocityContext();
-        LOGGER.info("Rendering with context keys: {}", Lists.newArrayList(context.getKeys()));
+        LOGGER.info("Rendering {} with context keys: {}", getClass().getSimpleName(),
+                Lists.newArrayList(context.getKeys()));
 
         StringWriter stringWriter = new StringWriter();
         template.merge(context, stringWriter);
