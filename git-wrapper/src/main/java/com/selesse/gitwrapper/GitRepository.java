@@ -22,6 +22,6 @@ public class GitRepository {
     }
 
     public List<CommitDiff> getCommitDiffs(RevCommit commit) throws IOException {
-        return CommitDiffs.getCommitDiffs(this, commit);
+        return CommitDiffs.getCommitDiffs(repository, commit);
     }
 }

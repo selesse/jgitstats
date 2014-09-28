@@ -14,23 +14,22 @@ import org.eclipse.jgit.util.io.DisabledOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-public class CommitDiffs {
-    public static List<CommitDiff> getCommitDiffs(GitRepository gitRepository, RevCommit commit) throws IOException {
+class CommitDiffs {
+    static List<CommitDiff> getCommitDiffs(Repository repository, RevCommit commit) throws IOException {
         List<CommitDiff> commitDiffList = Lists.newArrayList();
 
-        List<DiffEntry> diffEntries = getDiffs(gitRepository, commit);
+        List<DiffEntry> diffEntries = getDiffs(repository, commit);
         for (DiffEntry diffEntry : diffEntries) {
-            CommitDiff commitDiff = new CommitDiff(gitRepository, diffEntry);
+            CommitDiff commitDiff = new CommitDiff(repository, diffEntry);
             commitDiffList.add(commitDiff);
         }
 
         return commitDiffList;
     }
 
-    private static List<DiffEntry> getDiffs(GitRepository gitRepository, RevCommit commit) throws IOException {
+    private static List<DiffEntry> getDiffs(Repository repository, RevCommit commit) throws IOException {
         List<DiffEntry> diffEntries = Lists.newArrayList();
 
-        Repository repository = gitRepository.getRepository();
         RevWalk revWalk = new RevWalk(repository);
 
         RevCommit parent = null;
