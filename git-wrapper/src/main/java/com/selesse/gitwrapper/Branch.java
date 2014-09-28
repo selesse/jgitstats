@@ -8,16 +8,12 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 public class Branch {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Branch.class);
-
     private Repository repository;
     private String name;
     private List<RevCommit> revCommitList;

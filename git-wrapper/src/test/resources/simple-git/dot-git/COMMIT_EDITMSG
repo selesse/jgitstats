@@ -1,0 +1,31 @@
+Rename/delete some stuff
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Changes to be committed:
+#	renamed:    some-file -> some-file-renamed
+#	deleted:    test.c
+#	deleted:    test.o
+#
+# ------------------------ >8 ------------------------
+# Do not touch the line above.
+# Everything below will be removed.
+diff --git a/some-file b/some-file-renamed
+similarity index 100%
+rename from some-file
+rename to some-file-renamed
+diff --git a/test.c b/test.c
+deleted file mode 100644
+index 1a187f4..0000000
+--- a/test.c
++++ /dev/null
+@@ -1,5 +0,0 @@
+-#include <stdio.h>
+-
+-int main(void) {
+-    printf("hello world");
+-}
+diff --git a/test.o b/test.o
+deleted file mode 100644
+index 17c8907..0000000
+Binary files a/test.o and /dev/null differ

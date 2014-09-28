@@ -4,4 +4,6 @@ ext.jgitVersion = '3.4.1.201406201815-r'
 
 dependencies {
     compile "org.eclipse.jgit:org.eclipse.jgit:$jgitVersion"
+
+    testCompile 'commons-io:commons-io:2.4'
 }
