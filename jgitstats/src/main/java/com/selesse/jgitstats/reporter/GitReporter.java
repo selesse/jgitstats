@@ -85,9 +85,11 @@ public class GitReporter {
         File file = new File(baseDirectory, reportPagePath);
         File parentFile = file.getParentFile();
 
-        boolean madeDirectories = parentFile.mkdirs();
-        if (!madeDirectories) {
-            LOGGER.error("Error creating directories {} for {}", parentFile.getAbsolutePath(), reportPagePath);
+        if (!parentFile.exists()) {
+            boolean madeDirectories = parentFile.mkdirs();
+            if (!madeDirectories) {
+                LOGGER.error("Error creating directories {} for {}", parentFile.getAbsolutePath(), reportPagePath);
+            }
         }
         return new PrintStream(new FileOutputStream(file));
     }
