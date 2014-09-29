@@ -93,6 +93,8 @@ public class GitReporter {
         authorContext.put(ReportPageContext.REPOSITORY_NAME.asAttribute(), repositoryName);
         authorContext.put(ReportPageContext.BRANCH_NAME.asAttribute(), branchDetails.getBranch().getName());
         authorContext.put(ReportPageContext.AUTHOR_TO_COMMIT_MAP.asAttribute(), branchDetails.getAuthorToCommitMap());
+        authorContext.put(ReportPageContext.AUTHOR_TO_COMMIT_DIFFS_MAP.asAttribute(),
+                branchDetails.getAuthorToCommitDiffsMap());
 
         AuthorsTemplate authorsTemplate = new AuthorsTemplate(authorContext);
         authorsTemplate.render(out);

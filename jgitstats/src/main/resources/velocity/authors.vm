@@ -11,14 +11,29 @@
         <tr>
             <th> Author </th>
             <th> Number Of Commits </th>
+            <th> Lines Added </th>
+            <th> Lines Removed </th>
+            <th> Net Contribution </th>
         </tr>
         </thead>
         <tbody>
             #foreach ($author in $authorToCommitMap.keySet())
             <tr>
                 #set ( $commits = $authorToCommitMap.get($author) )
+                #set ( $diffs = $authorToCommitDiffsMap.get($author) )
+                #set ( $linesAdded = 0 )
+                #set ( $linesRemoved = 0 )
+                #foreach ($diff in $diffs)
+                    #set ( $linesAdded = $linesAdded + $diff.linesAdded )
+                    #set ( $linesRemoved = $linesRemoved + $diff.linesRemoved )
+                #end
+                #set ( $netContribution = $linesAdded - $linesRemoved )
+
                 <td> $author </td>
                 <td> $commits.size() </td>
+                <td> $linesAdded </td>
+                <td> $linesRemoved </td>
+                <td> $netContribution </td>
             </tr>
             #end
         </tbody>

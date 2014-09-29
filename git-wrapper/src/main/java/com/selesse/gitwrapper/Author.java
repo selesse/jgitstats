@@ -42,6 +42,6 @@ public class Author {
 
     @Override
     public String toString() {
-        return String.format("%s <%s>", getName(), getEmailAddress());
+        return getName() + " - " + getEmailAddress();
     }
 }
