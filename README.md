@@ -23,6 +23,9 @@ Ideas:
 
 4. Characterize the project's commits
 
+5. Which % of the code is currently owned by who? Git blame, keep track of all
+   every line.
+
 TODOs:
 
 1. Per-user +/- contributions. Can we intelligently detect author renames?
