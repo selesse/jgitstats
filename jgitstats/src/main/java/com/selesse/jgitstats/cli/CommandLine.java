@@ -60,7 +60,8 @@ public class CommandLine {
         public static Option fromString(String string) {
             if (string.equals("<git-repo>")) {
                 return GIT_REPO;
-            } else if (string.equals("--branch")) {
+            }
+            else if (string.equals("--branch")) {
                 return BRANCH_NAME;
             }
             return null;

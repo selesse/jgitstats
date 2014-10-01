@@ -17,7 +17,8 @@ public class Browser {
 
         try {
             desktop.browse(uri);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOGGER.info("Couldn't browse to {}", uri, e);
         }
     }

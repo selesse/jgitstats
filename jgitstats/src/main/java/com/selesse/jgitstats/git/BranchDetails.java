@@ -112,7 +112,8 @@ public class BranchDetails {
 
                     authorToCommitDiffMap.put(author, diff);
                 }
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 LOGGER.error("Error getting diffs for repository {} and commit {}", repository, revCommit);
             }
         }

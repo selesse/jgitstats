@@ -40,7 +40,8 @@ public class GitReporter {
             renderRepositoryHead();
             renderLineDiffs();
             renderAuthor();
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             LOGGER.error("Error creating report", e);
         }
     }
