@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.*;
 import java.util.List;
 
 public class RepositoryReader {
@@ -68,11 +69,15 @@ public class RepositoryReader {
             }
         }
 
+        String commitSHA = lastCommitId.getName();
         Author author = new Author(commit.getAuthorIdent());
         Author committer = new Author(commit.getCommitterIdent());
 
+        Instant commitInstant = Instant.ofEpochSecond(commit.getCommitTime());
+        ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(commitInstant, ZoneId.systemDefault());
+
         treeWalk.release();
 
-        return new Commit(lastCommitId.getName(), commit.getFullMessage(), author, committer, gitFileList);
+        return new Commit(commitSHA, commit.getFullMessage(), zonedDateTime, author, committer, gitFileList);
     }
 }

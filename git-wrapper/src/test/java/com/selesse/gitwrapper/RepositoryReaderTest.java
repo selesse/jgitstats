@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.*;
 import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -63,6 +64,8 @@ public class RepositoryReaderTest {
         assertThat(lastCommit.getAuthor()).isNotNull();
         assertThat(lastCommit.getCommitter()).isEqualTo(lastCommit.getAuthor());
         assertThat(lastCommit.getCommitMessage()).isEqualTo("chmod +755 hello.o\n");
+        ZonedDateTime commitDateTime = lastCommit.getCommitDateTime();
+        assertThat(commitDateTime).isEqualTo(ZonedDateTime.of(2014, 9, 28, 15, 26, 19, 0, ZoneOffset.ofHours(-5)));
 
         verifyTextFile(gitFiles.get(0), "README.md", "README\n");
         verifyTextFile(gitFiles.get(1), "some-file-renamed", "");
