@@ -2,14 +2,30 @@
 
 Yet another program for displaying stats about a Git repository.
 
-Goals:
+## Quick-Start
+
+To get started, make sure you have Java 8 installed and just `gradlew build`.
+
+Then, to get stats on a Git repository:
+
+```bash
+jgitstats/build/install/jgitstats/bin/jgitstats path/to/git/repo
+```
+
+## Architecture
+
+Currently, the project is split up into two major components: [git-wrapper],
+and [jgitstats].
+
+
+### Goals
 
 1. Lines of code per given period, filterable by file type
 2. Most lines of code per day of week, hour of day, etc
 3. Follows renames for lines of code
 4. Exclude certain files/directories
 
-Ideas:
+### Ideas
 
 1. Dynamic/static mode. Query-able API to return JSON so graphs can be done
    client-side.
@@ -26,7 +42,7 @@ Ideas:
 5. Which % of the code is currently owned by who? Git blame, keep track of all
    every line.
 
-TODOs:
+### TODOs
 
 1. Per-user +/- contributions. Can we intelligently detect author renames?
    If I am `Alex Selesse <selesse@gmail.com>` then I become
@@ -35,3 +51,10 @@ TODOs:
 
 
 2. Average commit length
+
+[git-wrapper]: git-wrapper
+[jgitstats]: jgitstats
+
+### License
+
+Apache
