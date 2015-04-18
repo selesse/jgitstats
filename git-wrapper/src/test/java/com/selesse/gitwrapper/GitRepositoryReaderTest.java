@@ -18,7 +18,7 @@ import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-public class RepositoryReaderTest {
+public class GitRepositoryReaderTest {
     private File temporaryDirectory;
     private File gitRoot;
     private File fileInGitRoot;
@@ -47,10 +47,10 @@ public class RepositoryReaderTest {
 
     @Test
     public void testIsValidGitRoot() throws IOException {
-        assertThat(RepositoryReader.isValidGitRoot("")).isFalse();
-        assertThat(RepositoryReader.isValidGitRoot(temporaryDirectory.getAbsolutePath())).isTrue();
-        assertThat(RepositoryReader.isValidGitRoot(fileInGitRoot.getAbsolutePath())).isFalse();
-        assertThat(RepositoryReader.isValidGitRoot(gitRoot.getAbsolutePath())).isFalse();
+        assertThat(GitRepositoryReader.isValidGitRoot("")).isFalse();
+        assertThat(GitRepositoryReader.isValidGitRoot(temporaryDirectory.getAbsolutePath())).isTrue();
+        assertThat(GitRepositoryReader.isValidGitRoot(fileInGitRoot.getAbsolutePath())).isFalse();
+        assertThat(GitRepositoryReader.isValidGitRoot(gitRoot.getAbsolutePath())).isFalse();
     }
 
     @Test
@@ -58,14 +58,15 @@ public class RepositoryReaderTest {
         GitRepository repository = SimpleGitFixture.getRepository();
         Branch branch = SimpleGitFixture.getBranch();
 
-        Commit lastCommit = RepositoryReader.loadLastCommit(repository, branch);
+        Commit lastCommit = GitRepositoryReader.loadLastCommit(repository, branch);
         List<GitFile> gitFiles = lastCommit.getFilesChanged();
         assertThat(gitFiles).hasSize(4);
         assertThat(lastCommit.getAuthor()).isNotNull();
         assertThat(lastCommit.getCommitter()).isEqualTo(lastCommit.getAuthor());
         assertThat(lastCommit.getCommitMessage()).isEqualTo("chmod +755 hello.o\n");
         ZonedDateTime commitDateTime = lastCommit.getCommitDateTime();
-        assertThat(commitDateTime).isEqualTo(ZonedDateTime.of(2014, 9, 28, 15, 26, 19, 0, ZoneOffset.ofHours(-5)));
+        ZonedDateTime commitDateTimeUTC = ZonedDateTime.ofInstant(commitDateTime.toInstant(), ZoneId.of("Z"));
+        assertThat(commitDateTimeUTC).isEqualTo(ZonedDateTime.of(2014, 9, 28, 19, 26, 19, 0, ZoneOffset.UTC));
 
         verifyTextFile(gitFiles.get(0), "README.md", "README\n");
         verifyTextFile(gitFiles.get(1), "some-file-renamed", "");
@@ -76,7 +77,7 @@ public class RepositoryReaderTest {
     @Test
     public void testLoadRepository() throws IOException, InterruptedException {
         GitRepositoryBuilder repositoryBuilder = GitRepositoryBuilder.create().runCommand("git init").build();
-        GitRepository repository = RepositoryReader.loadRepository(repositoryBuilder.getDirectory());
+        GitRepository repository = GitRepositoryReader.loadRepository(repositoryBuilder.getDirectory());
 
         assertThat(repository).isNotNull();
     }
@@ -86,7 +87,7 @@ public class RepositoryReaderTest {
         boolean exceptionWasThrown = false;
 
         try {
-            RepositoryReader.loadRepository(gitRoot);
+            GitRepositoryReader.loadRepository(gitRoot);
         }
         catch (IOException e) {
             assertThat(e).hasMessage("Invalid Git root: " + gitRoot.getAbsolutePath());

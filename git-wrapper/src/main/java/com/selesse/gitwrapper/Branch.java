@@ -16,14 +16,14 @@ import java.util.Map;
 public class Branch {
     private Repository repository;
     private String name;
-    private List<RevCommit> revCommitList;
+    private List<Commit> revCommitList;
 
     Branch(Repository repository, String name) {
         this.repository = repository;
         this.name = name;
     }
 
-    public List<RevCommit> getCommits() throws GitAPIException, IOException {
+    public List<Commit> getCommits() throws GitAPIException, IOException {
         if (revCommitList == null) {
             revCommitList = Lists.newArrayList();
 
@@ -59,7 +59,7 @@ public class Branch {
                     }
 
                     if (foundInThisBranch) {
-                        revCommitList.add(commit);
+                        revCommitList.add(Commits.fromRevCommit(repository, commit));
                     }
                 }
             }

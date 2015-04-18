@@ -2,7 +2,6 @@ package com.selesse.gitwrapper;
 
 import com.selesse.gitwrapper.fixtures.GitRepositoryBuilder;
 import com.selesse.gitwrapper.fixtures.SimpleGitFixture;
-import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
 
 import java.io.File;
@@ -15,7 +14,7 @@ public class BranchTest {
     @Test
     public void testGetCommits() throws Exception {
         Branch branch = SimpleGitFixture.getBranch();
-        List<RevCommit> commits = branch.getCommits();
+        List<Commit> commits = branch.getCommits();
 
         assertThat(commits).hasSize(4);
 
@@ -40,9 +39,9 @@ public class BranchTest {
                 build();
 
         File directory = repositoryBuilder.getDirectory();
-        GitRepository repository = RepositoryReader.loadRepository(directory);
+        GitRepository repository = GitRepositoryReader.loadRepository(directory);
         Branch branch = repository.getBranch("master");
-        List<RevCommit> commits = branch.getCommits();
+        List<Commit> commits = branch.getCommits();
 
         repositoryBuilder.cleanUp();
 
@@ -66,13 +65,13 @@ public class BranchTest {
                 build();
 
         File directory = repositoryBuilder.getDirectory();
-        GitRepository repository = RepositoryReader.loadRepository(directory);
+        GitRepository repository = GitRepositoryReader.loadRepository(directory);
 
         Branch masterBranch = repository.getBranch("master");
-        List<RevCommit> masterCommits = masterBranch.getCommits();
+        List<Commit> masterCommits = masterBranch.getCommits();
 
         Branch newBranch = repository.getBranch("newBranch");
-        List<RevCommit> newBranchCommits = newBranch.getCommits();
+        List<Commit> newBranchCommits = newBranch.getCommits();
 
         repositoryBuilder.cleanUp();
 

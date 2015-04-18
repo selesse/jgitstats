@@ -6,6 +6,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 public class Commit {
+
     private String sha;
     private String commitMessage;
     private ZonedDateTime commitDateTime;

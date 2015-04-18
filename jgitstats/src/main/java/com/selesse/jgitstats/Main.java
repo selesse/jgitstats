@@ -1,7 +1,7 @@
 package com.selesse.jgitstats;
 
 import com.google.common.io.Files;
-import com.selesse.gitwrapper.RepositoryReader;
+import com.selesse.gitwrapper.GitRepositoryReader;
 import com.selesse.jgitstats.browser.Browser;
 import com.selesse.jgitstats.cli.CommandLine;
 import com.selesse.jgitstats.git.BranchAnalyzer;
@@ -24,7 +24,7 @@ public class Main {
         String gitPath = (String) options.get(CommandLine.Option.GIT_REPO);
         gitPath = sanitizePath(gitPath);
 
-        boolean isValidGitPath = RepositoryReader.isValidGitRoot(gitPath);
+        boolean isValidGitPath = GitRepositoryReader.isValidGitRoot(gitPath);
 
         if (!isValidGitPath) {
             LOGGER.error("Error: {} is an invalid Git root", gitPath);

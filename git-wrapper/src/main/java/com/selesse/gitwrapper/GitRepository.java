@@ -1,7 +1,6 @@
 package com.selesse.gitwrapper;
 
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.io.IOException;
 import java.util.List;
@@ -21,7 +20,7 @@ public class GitRepository {
         return repository;
     }
 
-    public List<CommitDiff> getCommitDiffs(RevCommit commit) throws IOException {
+    public List<CommitDiff> getCommitDiffs(Commit commit) throws IOException {
         return CommitDiffs.getCommitDiffs(repository, commit);
     }
 }

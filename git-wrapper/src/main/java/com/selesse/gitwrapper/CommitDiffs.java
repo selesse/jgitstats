@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.RawTextComparator;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -15,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 class CommitDiffs {
-    static List<CommitDiff> getCommitDiffs(Repository repository, RevCommit commit) throws IOException {
+    static List<CommitDiff> getCommitDiffs(Repository repository, Commit commit) throws IOException {
         List<CommitDiff> commitDiffList = Lists.newArrayList();
 
         List<DiffEntry> diffEntries = getDiffs(repository, commit);
@@ -27,14 +28,16 @@ class CommitDiffs {
         return commitDiffList;
     }
 
-    private static List<DiffEntry> getDiffs(Repository repository, RevCommit commit) throws IOException {
+    private static List<DiffEntry> getDiffs(Repository repository, Commit commit) throws IOException {
         List<DiffEntry> diffEntries = Lists.newArrayList();
 
         RevWalk revWalk = new RevWalk(repository);
 
         RevCommit parent = null;
-        if (commit.getParentCount() > 0 && commit.getParent(0) != null) {
-            parent = revWalk.parseCommit(commit.getParent(0).getId());
+        ObjectId id = ObjectId.fromString(commit.getSHA());
+        RevCommit revCommit = revWalk.parseCommit(id);
+        if (revCommit.getParentCount() > 0 && revCommit.getParent(0) != null) {
+            parent = revWalk.parseCommit(revCommit.getParent(0).getId());
         }
 
         DiffFormatter diffFormatter = new DiffFormatter(DisabledOutputStream.INSTANCE);
@@ -46,11 +49,11 @@ class CommitDiffs {
         if (parent == null) {
             EmptyTreeIterator emptyTreeIterator = new EmptyTreeIterator();
             CanonicalTreeParser canonicalTreeParser =
-                    new CanonicalTreeParser(null, revWalk.getObjectReader(), commit.getTree());
+                    new CanonicalTreeParser(null, revWalk.getObjectReader(), revCommit.getTree());
             diffs = diffFormatter.scan(emptyTreeIterator, canonicalTreeParser);
         }
         else {
-            diffs = diffFormatter.scan(parent.getTree(), commit.getTree());
+            diffs = diffFormatter.scan(parent.getTree(), revCommit.getTree());
         }
 
         for (DiffEntry diff : diffs) {
