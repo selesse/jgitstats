@@ -17,7 +17,7 @@ public class GitRepository {
         return new Branch(repository, name);
     }
 
-    public Repository getRepository() {
+    Repository getRepository() {
         return repository;
     }
 

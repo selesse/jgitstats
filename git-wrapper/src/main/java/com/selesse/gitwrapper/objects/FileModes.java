@@ -1,4 +1,4 @@
-package com.selesse.gitwrapper;
+package com.selesse.gitwrapper.objects;
 
 import org.eclipse.jgit.lib.FileMode;
 

@@ -1,10 +1,6 @@
 package com.selesse.jgitstats.git;
 
-import com.google.common.base.Supplier;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Multimaps;
+import com.google.common.collect.*;
 import com.selesse.gitwrapper.*;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.slf4j.Logger;
@@ -37,24 +33,8 @@ public class BranchDetails {
         Map<Author, Collection<RevCommit>> authorToCommitTreeMap = Maps.newTreeMap(getAuthorComparator());
         Map<Author, Collection<CommitDiff>> authorToCommitDiffTreeMap = Maps.newTreeMap(getAuthorComparator());
 
-        this.authorToCommitMap = Multimaps.newListMultimap(
-                authorToCommitTreeMap,
-                new Supplier<List<RevCommit>>() {
-                    @Override
-                    public List<RevCommit> get() {
-                        return Lists.newArrayList();
-                    }
-                }
-        );
-        this.authorToCommitDiffMap = Multimaps.newListMultimap(
-                authorToCommitDiffTreeMap,
-                new Supplier<List<CommitDiff>>() {
-                    @Override
-                    public List<CommitDiff> get() {
-                        return Lists.newArrayList();
-                    }
-                }
-        );
+        this.authorToCommitMap = Multimaps.newListMultimap(authorToCommitTreeMap, Lists::newArrayList);
+        this.authorToCommitDiffMap = Multimaps.newListMultimap(authorToCommitDiffTreeMap, Lists::newArrayList);
 
         computeMembers(commits);
     }
@@ -120,17 +100,9 @@ public class BranchDetails {
     }
 
     private Comparator<Author> getAuthorComparator() {
-        return new Comparator<Author>() {
-            @Override
-            public int compare(Author o1, Author o2) {
-                int name = o1.getName().compareToIgnoreCase(o2.getName());
-
-                if (name == 0) {
-                    return o1.getEmailAddress().compareToIgnoreCase(o2.getEmailAddress());
-                }
-
-                return name;
-            }
-        };
+        return (o1, o2) -> ComparisonChain.start()
+                .compare(o1.getName(), o2.getName())
+                .compare(o1.getEmailAddress(), o2.getEmailAddress())
+                .result();
     }
 }

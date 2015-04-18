@@ -12,7 +12,6 @@ import java.io.IOException;
 public class SimpleGitFixture {
     private static final String simpleGitPath = Resources.getResource("simple-git/dot-git").getPath();
 
-
     public static GitRepository getRepository() throws IOException {
         Repository repository = new FileRepositoryBuilder().setGitDir(new File(simpleGitPath))
                 .readEnvironment()

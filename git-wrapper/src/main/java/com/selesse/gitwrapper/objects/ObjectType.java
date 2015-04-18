@@ -1,4 +1,4 @@
-package com.selesse.gitwrapper;
+package com.selesse.gitwrapper.objects;
 
 public enum ObjectType {
     BAD_OBJECT(-1),

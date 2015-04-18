@@ -11,25 +11,31 @@ public class GitFile {
     private String path;
     private FileMode fileMode;
     private boolean isBinary;
+    private byte[] byteContents;
     private List<String> contents;
-    private int numberOfLines;
 
-    public GitFile(String path, FileMode fileMode, byte[] bytes) throws UnsupportedEncodingException {
+    public GitFile(String path, FileMode fileMode, byte[] bytes) {
         this.path = path;
         this.fileMode = fileMode;
         this.isBinary = RawText.isBinary(bytes);
-
-        // UTF-8 is literally the only encoding ever, right?
-        String fileContents = new String(bytes, "UTF-8");
-        this.contents = Splitter.onPattern("\r?\n").splitToList(fileContents);
-        this.numberOfLines = contents.size();
+        this.byteContents = bytes;
     }
 
     public int getNumberOfLines() {
-        return numberOfLines;
+        return getContents().size();
     }
 
     public List<String> getContents() {
+        if (contents == null) {
+            try {
+                // UTF-8 is the only encoding, ever, right?
+                String fileContents = new String(byteContents, "UTF-8");
+                contents = Splitter.onPattern("\r?\n").splitToList(fileContents);
+            }
+            catch (UnsupportedEncodingException e) {
+                throw new IllegalArgumentException("Error reading file: " + path);
+            }
+        }
         return contents;
     }
 

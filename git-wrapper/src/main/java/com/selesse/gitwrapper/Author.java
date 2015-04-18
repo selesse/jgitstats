@@ -2,6 +2,8 @@ package com.selesse.gitwrapper;
 
 import org.eclipse.jgit.lib.PersonIdent;
 
+import java.util.Objects;
+
 public class Author {
     private String name;
     private String emailAddress;
@@ -30,18 +32,17 @@ public class Author {
 
         Author author = (Author) o;
 
-        return emailAddress.equals(author.emailAddress) && name.equals(author.name);
+        return Objects.equals(getName(), author.getName()) &&
+                Objects.equals(getEmailAddress(), author.getEmailAddress());
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + emailAddress.hashCode();
-        return result;
+        return Objects.hash(name, emailAddress);
     }
 
     @Override
     public String toString() {
-        return getName() + " - " + getEmailAddress();
+        return getName() + " <" + getEmailAddress() + ">";
     }
 }

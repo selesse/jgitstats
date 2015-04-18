@@ -13,6 +13,8 @@ subprojects {
     apply plugin: 'cobertura'
     apply plugin: 'java'
 
+    sourceCompatibility = 1.8
+
     repositories {
         mavenCentral()
     }
@@ -27,6 +29,7 @@ subprojects {
     }
 
     checkstyle {
+        toolVersion = "6.5"
         configFile = new File(rootDir, "checkstyle.xml")
     }
 }

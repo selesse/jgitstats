@@ -57,8 +57,12 @@ public class RepositoryReaderTest {
         GitRepository repository = SimpleGitFixture.getRepository();
         Branch branch = SimpleGitFixture.getBranch();
 
-        List<GitFile> gitFiles = RepositoryReader.loadRepositoryLastCommit(repository, branch);
+        Commit lastCommit = RepositoryReader.loadLastCommit(repository, branch);
+        List<GitFile> gitFiles = lastCommit.getFilesChanged();
         assertThat(gitFiles).hasSize(4);
+        assertThat(lastCommit.getAuthor()).isNotNull();
+        assertThat(lastCommit.getCommitter()).isEqualTo(lastCommit.getAuthor());
+        assertThat(lastCommit.getCommitMessage()).isEqualTo("chmod +755 hello.o\n");
 
         verifyTextFile(gitFiles.get(0), "README.md", "README\n");
         verifyTextFile(gitFiles.get(1), "some-file-renamed", "");
@@ -82,7 +86,7 @@ public class RepositoryReaderTest {
             RepositoryReader.loadRepository(gitRoot);
         }
         catch (IOException e) {
-            assertThat(e).hasMessage("Invalid Git root " + gitRoot.getAbsolutePath());
+            assertThat(e).hasMessage("Invalid Git root: " + gitRoot.getAbsolutePath());
             exceptionWasThrown = true;
         }
 

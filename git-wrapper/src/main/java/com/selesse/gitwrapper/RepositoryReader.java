@@ -1,10 +1,8 @@
 package com.selesse.gitwrapper;
 
 import com.google.common.collect.Lists;
-import org.eclipse.jgit.lib.FileMode;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.ObjectLoader;
-import org.eclipse.jgit.lib.Repository;
+import com.selesse.gitwrapper.objects.FileModes;
+import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -21,7 +19,7 @@ public class RepositoryReader {
 
     public static boolean isValidGitRoot(String path) {
         File gitRoot = new File(path);
-        if (!gitRoot.exists() || !gitRoot.isDirectory()) {
+        if (!gitRoot.isDirectory()) {
             return false;
         }
 
@@ -31,15 +29,14 @@ public class RepositoryReader {
 
     public static GitRepository loadRepository(File directory) throws IOException {
         if (!isValidGitRoot(directory.getAbsolutePath())) {
-            throw new IOException("Invalid Git root " + directory.getAbsolutePath());
+            throw new IOException("Invalid Git root: " + directory.getAbsolutePath());
         }
 
         Repository repository = new FileRepositoryBuilder().findGitDir(directory).build();
         return new GitRepository(repository);
     }
 
-    public static List<GitFile> loadRepositoryLastCommit(GitRepository gitRepository, Branch branch)
-            throws IOException {
+    public static Commit loadLastCommit(GitRepository gitRepository, Branch branch) throws IOException {
         List<GitFile> gitFileList = Lists.newArrayList();
 
         Repository repository = gitRepository.getRepository();
@@ -71,8 +68,11 @@ public class RepositoryReader {
             }
         }
 
+        Author author = new Author(commit.getAuthorIdent());
+        Author committer = new Author(commit.getCommitterIdent());
+
         treeWalk.release();
 
-        return gitFileList;
+        return new Commit(lastCommitId.getName(), commit.getFullMessage(), author, committer, gitFileList);
     }
 }
